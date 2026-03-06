@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaetano Hamilton — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #F5F3EE;
+      --fg:           #111111;
+      --muted:        #888880;
+      --border:       #DDDBD5;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+      --font-body:    'DM Sans', sans-serif;
+      --nav-h:        52px;
+      --gap:          clamp(1rem, 2vw, 2rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: clamp(13px, 1.1vw, 15px);
+      line-height: 1.65;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    a, button, input, textarea, .portfolio-item { cursor: none; }
+
+    /* ── CUSTOM CURSOR ─────────────────────────────────────────── */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      left: -100px; top: -100px;
+      transform: translate(-50%, -50%);
+      transition: width 0.18s ease, height 0.18s ease,
+                  background 0.3s ease, border-color 0.3s ease;
+      z-index: 99999;
+      background: var(--fg);
+      border: 1.5px solid transparent;
+    }
+    /* Light mode (default — dark pages) */
+    #cursor.light {
+      background: #fff;
+      border-color: transparent;
+    }
+    /* Hover ring state */
+    #cursor.hover {
+      width: 30px; height: 30px;
+      background: transparent;
+      border-color: var(--fg);
+    }
+    #cursor.hover.light {
+      background: transparent;
+      border-color: #A90000;
+    }
+
+    /* ── GRAIN ─────────────────────────────────────────────────── */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 3vw, 3rem);
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+      z-index: 200;
+    }
+    nav.scrolled { border-color: var(--border); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.08em; line-height: 1; }
+    .nav-logo span { opacity: 0.35; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--fg); transition: width 0.25s ease; }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HERO ──────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100svh; display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 3vw, 3rem) clamp(3rem, 6vw, 6rem);
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      /* ---- CHANGE THIS: add background-image: url('your-hero.jpg'); background-size: cover; ---- */
+      background: linear-gradient(135deg, #e8e4dc 0%, #c8c0b4 100%);
+    }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(245,243,238,0.65) 0%, transparent 55%); }
+    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+    .hero-label {
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
+      opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
+    }
+    .hero-title {
+      font-family: var(--font-display); font-size: clamp(4rem, 10vw, 11rem);
+      line-height: 0.92; letter-spacing: 0.02em;
+      opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
+    }
+    .hero-title em { font-style: normal; color: var(--muted); }
+    .hero-sub {
+      margin-top: 2rem; font-family: var(--font-mono); font-size: 0.75rem;
+      letter-spacing: 0.08em; color: var(--muted); max-width: 420px; line-height: 1.9;
+      opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.8s ease forwards;
+    }
+    .hero-scroll {
+      position: absolute; bottom: clamp(2rem,4vw,4rem); right: clamp(1.5rem,3vw,3rem);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl;
+      opacity: 0; animation: fadeIn 1s 1.2s ease forwards;
+    }
+    .hero-scroll::before { content: ''; width: 1px; height: 40px; background: var(--muted); animation: scrollLine 1.5s 1.5s ease infinite; }
+    @keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom} }
+
+    /* ── SECTIONS ──────────────────────────────────────────────── */
+    section { padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 3vw, 3rem); }
+    .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--border); padding-top: 1.5rem; }
+    .section-number { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
+    .section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: 0.04em; line-height: 1; }
+
+    /* ── REVEAL (visible by default, animated if observer works) ─ */
+    .reveal { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.hidden { opacity: 0; transform: translateY(24px); }
+    .reveal.hidden.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── PORTFOLIO GRID ────────────────────────────────────────── */
+    #work { background: var(--bg); }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: var(--gap);
+    }
+    .portfolio-item { display: block; position: relative; }
+    .portfolio-item .thumb {
+      aspect-ratio: 4/3; overflow: hidden;
+      background: var(--border); position: relative;
+    }
+    .portfolio-item .thumb img,
+    .portfolio-item .thumb .thumb-placeholder {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .portfolio-item:hover .thumb img,
+    .portfolio-item:hover .thumb .thumb-placeholder { transform: scale(1.04); }
+    .thumb-placeholder { width: 100%; height: 100%; }
+    .item-info { padding: 0.85rem 0 0.2rem; display: flex; justify-content: space-between; align-items: baseline; }
+    .item-name { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .item-tag  { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    .item-desc { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.5; }
+
+    /* ── PROJECT MODAL ─────────────────────────────────────────── */
+    #modal {
+      position: fixed; inset: 0;
+      background: #fff; z-index: 1000;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+      overflow: hidden;
+    }
+    #modal.open { opacity: 1; pointer-events: all; }
+    .modal-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 3vw, 3rem);
+      height: var(--nav-h); flex-shrink: 0;
+      border-bottom: 1px solid var(--border); background: #fff; z-index: 10;
+    }
+    .modal-bar-title { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    #modal-close {
+      width: 44px; height: 44px;
+      background: var(--fg); color: #fff; border: none;
+      font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: opacity 0.2s;
+    }
+    #modal-close:hover { opacity: 0.65; }
+    .modal-body {
+      display: grid; grid-template-columns: 1fr 360px;
+      height: calc(100vh - var(--nav-h)); overflow: hidden;
+    }
+    .modal-images {
+      overflow-y: auto;
+      padding: clamp(2rem, 4vw, 4rem);
+      display: flex; flex-direction: column; gap: 1.5rem;
+      border-right: 1px solid var(--border);
+    }
+    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #FFFFFF; }
+// var(--border); }
+    .modal-img-block.main  { aspect-ratio: 2/1.2; }
+    .modal-img-block.extra { aspect-ratio: 2/1.1; }
+    .modal-img-block img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .modal-img-block .ph  { width: 100%; height: 100%; display: block; }
+    .modal-info {
+      padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
+      display: flex; flex-direction: column; gap: 1.75rem; overflow: hidden;
+    }
+    .modal-project-title { font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 0.03em; line-height: 0.95; }
+    .modal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .modal-desc { font-size: 0.88rem; line-height: 1.9; color: #444; }
+    .modal-meta { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .modal-meta-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .modal-meta-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .modal-meta-value { font-family: var(--font-mono); font-size: 0.68rem; }
+    .modal-nav-row { margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .modal-nav-btn { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); background: none; border: none; transition: color 0.2s; }
+    .modal-nav-btn:hover { color: var(--fg); }
+
+    /* ── ABOUT (dark section) ──────────────────────────────────── */
+    #about { background: var(--fg); color: var(--bg); }
+    #about .section-header { border-color: rgba(255,255,255,0.15); }
+    #about .section-number { color: rgba(255,255,255,0.3); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,8rem); align-items: start; }
+    .about-image { aspect-ratio: 3/4; overflow: hidden; background: #222; }
+    .about-image-placeholder { width: 100%; height: 100%; background: linear-gradient(160deg,#222,#2e2e2e); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
+    .about-text { padding-top: 1rem; }
+    .about-name { font-family: var(--font-display); font-size: clamp(3rem,6vw,7rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2.5rem; }
+    .about-bio { font-size: clamp(0.85rem,1.2vw,1rem); line-height: 1.85; color: rgba(245,243,238,0.75); max-width: 500px; margin-bottom: 2rem; }
+    .about-links { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 3rem; }
+    .about-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); transition: color 0.2s; display: flex; align-items: center; gap: 0.75rem; }
+    .about-link::before { content: '→'; }
+    .about-link:hover { color: rgba(255,255,255,0.9); }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 3rem; }
+    .tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 0.9rem; color: rgba(255,255,255,0.5); transition: border-color 0.2s, color 0.2s; }
+    .tag:hover { border-color: rgba(255,255,255,0.6); color: rgba(255,255,255,0.9); }
+    .about-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
+    .stat-num { font-family: var(--font-display); font-size: clamp(2rem,3vw,3.5rem); letter-spacing: 0.04em; line-height: 1; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 0.3rem; }
+
+    /* ── CONTACT ───────────────────────────────────────────────── */
+    #contact { background: var(--bg); }
+    .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,8rem); align-items: start; }
+    .contact-heading { font-family: var(--font-display); font-size: clamp(3rem,7vw,8rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2rem; }
+    .contact-note { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); line-height: 1.8; max-width: 340px; }
+    .contact-links { margin-top: 3rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .contact-link { display: flex; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--muted); transition: color 0.2s; }
+    .contact-link:hover { color: var(--fg); }
+    .contact-link::before { content: '→'; font-size: 0.8rem; }
+    .contact-form { padding-top: 0.5rem; }
+    .form-row { margin-bottom: 1.8rem; }
+    .form-row label { display: block; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .form-row input, .form-row textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); padding: 0.5rem 0 0.75rem; font-family: var(--font-body); font-size: 0.9rem; color: var(--fg); outline: none; transition: border-color 0.2s; resize: none; }
+    .form-row input:focus, .form-row textarea:focus { border-color: var(--fg); }
+    .form-row textarea { min-height: 100px; }
+    .btn-submit { display: inline-flex; align-items: center; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; background: var(--fg); color: var(--bg); border: none; padding: 1rem 2rem; transition: opacity 0.2s; margin-top: 0.5rem; }
+    .btn-submit:hover { opacity: 0.75; }
+    .btn-submit .arrow { transition: transform 0.2s; }
+    .btn-submit:hover .arrow { transform: translateX(4px); }
+
+    /* ── FOOTER ────────────────────────────────────────────────── */
+    footer { padding: 2rem clamp(1.5rem,3vw,3rem); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
+    .footer-back { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .footer-back:hover { color: var(--fg); }
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .modal-body { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      #modal { overflow-y: auto; }
+      .modal-images { height: auto; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
+      .modal-info { overflow: visible; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+
+  <!-- PROJECT MODAL -->
+  <div id="modal" role="dialog" aria-modal="true">
+    <div class="modal-bar">
+      <span class="modal-bar-title" id="modal-bar-label">Project</span>
+      <button id="modal-close" aria-label="Close">X</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-images" id="modal-images"></div>
+      <div class="modal-info">
+        <div>
+          <p class="modal-tag"            id="modal-tag"></p>
+          <h2 class="modal-project-title" id="modal-title"></h2>
+        </div>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-meta" id="modal-meta"></div>
+        <div class="modal-nav-row">
+          <button class="modal-nav-btn" id="modal-prev">← Prev</button>
+          <button class="modal-nav-btn" id="modal-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo">GH<span> ®</span></a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-label">Designer · Engineer · Artist</p>
+      <h1 class="hero-title">GAETANO<br><em>HAMILTON</em></h1>
+      <p class="hero-sub">
+        Mechanical Engineering &amp; Design, Innovation, and Society.<br>
+        Rensselaer Polytechnic Institute — Senior.<br>
+        Merging engineering precision with creative problem-solving.
+      </p>
+    </div>
+    <span class="hero-scroll">Scroll</span>
+  </section>
+
+  <!-- ============================================================
+       WORK SECTION
+
+       HOW TO ADD YOUR THUMBNAIL IMAGE:
+       Replace:  <div class="thumb-placeholder" style="background:#xxx;..."></div>
+       With:     <img src="your-image.jpg" alt="Project Name">
+       Keep the outer <div class="thumb"> wrapper intact.
+
+       HOW TO ADD EXTRA MODAL IMAGES:
+       Fill data-images="photo2.jpg,photo3.jpg"
+       (comma-separated filenames in the same folder as this file)
+       Leave as "" for auto colour placeholders.
+       ============================================================ -->
+  <section id="work">
+    <div class="section-header reveal">
+      <span class="section-number">[ 01 ]</span>
+      <h2 class="section-title">Work</h2>
+    </div>
+    <div class="portfolio-grid">
+
+      <!-- PROJECT 1 — Solemates (No-Tie Sneakers) -->
+      <div class="portfolio-item reveal"
+           data-title="Solemates"
+           data-tag="Product Design"
+           data-year="2023"
+           data-role="Design, Prototyping, User Testing"
+           data-desc="Collaborated to create a no-tie sneaker, enhancing accessibility for users with limited dexterity. Designed and 3D printed tightening mechanisms, and integrated them into hand-sewn shoes. Conducted user testing, gathered feedback, and iterated upon the design based on results."
+           data-color="#C4B9AA"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#C4B9AA;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="solemates.jpg" alt="Solemates"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Solemates</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Accessible no-tie sneaker with 3D-printed tightening mechanisms.</p>
+      </div>
+
+      <!-- PROJECT 2 — Accessible Jewelry Clasps -->
+      <div class="portfolio-item reveal reveal-delay-1"
+           data-title="Accessible Jewelry Clasps"
+           data-tag="Product Design"
+           data-year="2023"
+           data-role="Design, Prototyping"
+           data-desc="Designed and developed accessible jewelry clasps to assist users with limited hand dexterity in independently wearing necklaces and bracelets. Focused on inclusive design principles, iterating through prototypes to balance usability, aesthetics, and function."
+           data-color="#C9BFB6"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#C9BFB6;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="jewelry-clasps.jpg" alt="Accessible Jewelry Clasps"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Accessible Jewelry Clasps</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Inclusive clasp design for users with limited dexterity.</p>
+      </div>
+
+      <!-- PROJECT 3 — Gravity-Powered Wooden Gear Clock -->
+      <div class="portfolio-item reveal reveal-delay-2"
+           data-title="Gravity-Powered Wooden Gear Clock"
+           data-tag="Craft & Engineering"
+           data-year="2023"
+           data-role="Design, Fabrication"
+           data-desc="Hand-crafted a gravity-powered wooden clock with a tourbillon escapement — a mechanism originally invented to improve pocket watch accuracy by compensating for the effects of gravity. A project that merges precision engineering with fine craft and artistic expression."
+           data-color="#A89F94"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#A89F94;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="gear-clock.jpg" alt="Gravity-Powered Wooden Gear Clock"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Wooden Gear Clock</span>
+          <span class="item-tag">Craft & Engineering</span>
+        </div>
+        <p class="item-desc">Hand-crafted gravity-powered wooden clock with tourbillon escapement.</p>
+      </div>
+
+      <!-- PROJECT 4 — Paper Lantern Lamps -->
+      <div class="portfolio-item reveal reveal-delay-3"
+           data-title="Paper Lantern Lamps"
+           data-tag="Art & Design"
+           data-year="2023"
+           data-role="Design, Fabrication"
+           data-desc="Designed and hand-crafted a series of paper lantern lamps combining traditional lantern-making techniques with contemporary form. Each lamp explores the interplay of light, shadow, and material — producing dynamic lighting effects from delicate folded paper structures."
+           data-color="#D6CEBC"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#D6CEBC;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="paper-lanterns.jpg" alt="Paper Lantern Lamps"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Paper Lantern Lamps</span>
+          <span class="item-tag">Art & Design</span>
+        </div>
+        <p class="item-desc">Handcrafted lamps exploring light, shadow, and folded paper.</p>
+      </div>
+
+      <!-- PROJECT 5 — Hydro-Powered Curiosity -->
+      <div class="portfolio-item reveal"
+           data-title="Hydro-Powered Curiosity"
+           data-tag="Art & Engineering"
+           data-year="2024"
+           data-role="Concept, Design, Fabrication"
+           data-desc="Conceptualized and developed a hydro-powered installation that translates water flow into sound through a design studio project. Combined art and engineering to inspire curiosity and showcase water's regenerative power. Received interest and guidance for future expansion through art registries and residencies."
+           data-color="#9EAAB0"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#9EAAB0;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="hydro-curiosity.jpg" alt="Hydro-Powered Curiosity"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Hydro-Powered Curiosity</span>
+          <span class="item-tag">Art & Engineering</span>
+        </div>
+        <p class="item-desc">Water flow translated into sound — art meets regenerative engineering.</p>
+      </div>
+
+      <!-- PROJECT 6 — Baseball Sneakers -->
+      <div class="portfolio-item reveal reveal-delay-1"
+           data-title="Baseball Sneakers"
+           data-tag="Product Design"
+           data-year="2023"
+           data-role="Design, Fabrication"
+           data-desc="Designed and hand-sewn a pair of sneakers inspired by baseball aesthetics — incorporating classic stitching patterns, material choices, and silhouettes drawn from America's pastime. A project at the intersection of footwear design, craft, and cultural reference."
+           data-color="#BFB8AD"
+           data-images="Slide14.jpg, Slide15.jpg, Slide16.jpg, Slide17.jpg">
+        <div class="thumb">
+          <img src="sneakers.jpg" alt="Baseball Sneakers">
+        </div>
+        <div class="item-info">
+          <span class="item-name">Baseball Sneakers</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Hand-sewn sneakers inspired by baseball craft and aesthetics.</p>
+      </div>
+
+      <!-- PROJECT 7 — Agricultural Ornithopter -->
+      <div class="portfolio-item reveal reveal-delay-2"
+           data-title="Agricultural Ornithopter"
+           data-tag="Mechanical Engineering"
+           data-year="2024"
+           data-role="Team Lead, Design & Engineering"
+           data-desc="Led a team in designing an ornithopter — a flapping-wing aircraft — for crop monitoring and pest control. Engineered and tested a mechanical flapping mechanism that mimics bird flight, and communicated project challenges and solutions to stakeholders throughout the process."
+           data-color="#B8B5AE"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#B8B5AE;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="ornithopter.jpg" alt="Agricultural Ornithopter"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Agricultural Ornithopter</span>
+          <span class="item-tag">Mech. Engineering</span>
+        </div>
+        <p class="item-desc">Flapping-wing aircraft for crop monitoring and pest control.</p>
+      </div>
+
+      <!-- PROJECT 8 — Scents-ory Toy Series -->
+      <div class="portfolio-item reveal reveal-delay-3"
+           data-title="Scents-ory Toy Series"
+           data-tag="Product Design"
+           data-year="2024"
+           data-role="Concept, Design, Prototyping"
+           data-desc="Developed the Scents-ory toy series — a collection of sensory toys designed to engage children through scent, texture, and play. Explored multi-sensory design principles to create products that support developmental play while being engaging, safe, and delightful."
+           data-color="#C8C2B8"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#C8C2B8;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="scentsory.jpg" alt="Scents-ory Toy Series"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Scents-ory Toy Series</span>
+          <span class="item-tag">Product Design</span>
+        </div>
+        <p class="item-desc">Multi-sensory toy series engaging children through scent and play.</p>
+      </div>
+
+      <!-- PROJECT 9 — Renderings -->
+      <div class="portfolio-item reveal"
+           data-title="Renderings"
+           data-tag="Digital Design"
+           data-year="2022–Present"
+           data-role="3D Modeling, Visualization"
+           data-desc="A collection of 3D renderings and visualizations produced across various projects and explorations. Showcasing proficiency in CAD, surfacing, and photorealistic rendering — from product concepts to architectural and mechanical forms."
+           data-color="#BDB7AF"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#BDB7AF;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="renderings.jpg" alt="Renderings"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Renderings</span>
+          <span class="item-tag">Digital Design</span>
+        </div>
+        <p class="item-desc">3D renderings and visualizations across projects and explorations.</p>
+      </div>
+
+      <!-- PROJECT 10 — Automata -->
+      <div class="portfolio-item reveal reveal-delay-1"
+           data-title="Automata"
+           data-tag="Craft & Engineering"
+           data-year="2023"
+           data-role="Design, Fabrication"
+           data-desc="Designed and built a series of automata — mechanical sculptures that produce animated, lifelike movement through carefully engineered cam and linkage systems. Each piece explores the poetry of motion, translating mechanical precision into expressive, whimsical form."
+           data-color="#AFA99F"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#AFA99F;width:100%;height:100%;"></div>
+          <!-- Replace with: <img src="automata.jpg" alt="Automata"> -->
+        </div>
+        <div class="item-info">
+          <span class="item-name">Automata</span>
+          <span class="item-tag">Craft & Engineering</span>
+        </div>
+        <p class="item-desc">Mechanical sculptures animating motion through cams and linkages.</p>
+      </div>
+
+      <!-- PROJECT 11 — Work in Progress -->
+      <div class="portfolio-item reveal reveal-delay-2"
+           data-title="Work in Progress"
+           data-tag="Coming Soon"
+           data-year="2025"
+           data-role="——"
+           data-desc="This slot is ready for your next project. Update the data attributes above and swap in a thumbnail image."
+           data-color="#D4CFC8"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#D4CFC8;width:100%;height:100%;"></div>
+        </div>
+        <div class="item-info">
+          <span class="item-name">Work in Progress</span>
+          <span class="item-tag">Coming Soon</span>
+        </div>
+        <p class="item-desc">Project in development — coming soon.</p>
+      </div>
+
+      <!-- PROJECT 12 — Work in Progress -->
+      <div class="portfolio-item reveal reveal-delay-3"
+           data-title="Work in Progress"
+           data-tag="Coming Soon"
+           data-year="2025"
+           data-role="——"
+           data-desc="This slot is ready for your next project. Update the data attributes above and swap in a thumbnail image."
+           data-color="#CCCAC4"
+           data-images="">
+        <div class="thumb">
+          <div class="thumb-placeholder" style="background:#CCCAC4;width:100%;height:100%;"></div>
+        </div>
+        <div class="item-info">
+          <span class="item-name">Work in Progress</span>
+          <span class="item-tag">Coming Soon</span>
+        </div>
+        <p class="item-desc">Project in development — coming soon.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-number">[ 02 ]</span>
+      <h2 class="section-title">About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <!-- CHANGE THIS: <img src="your-photo.jpg" alt="Gaetano Hamilton"> -->
+        <div class="about-image-placeholder">Your photo here</div>
+      </div>
+      <div class="about-text">
+        <h3 class="about-name reveal">GAETANO<br>HAMILTON</h3>
+        <p class="about-bio reveal reveal-delay-1">
+          I'm a dual major student at RPI, studying Mechanical Engineering and
+          Design, Innovation, &amp; Society, with a deep interest in merging
+          engineering and design. I thrive in collaborative environments,
+          bringing curiosity and innovation to every project — from
+          flapping-wing aircraft to hydro-powered sound installations.
+        </p>
+        <div class="about-links reveal reveal-delay-1">
+          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" class="about-link">LinkedIn</a>
+          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" class="about-link">Instructables</a>
+          <a href="https://files.cargocollective.com/c2030723/Gaetano_Hamilton_Resume.pdf" target="_blank" class="about-link">Download Resume</a>
+        </div>
+        <div class="about-tags reveal reveal-delay-2">
+          <span class="tag">Mechanical Engineering</span>
+          <span class="tag">Product Design</span>
+          <span class="tag">CAD & 3D Modeling</span>
+          <span class="tag">Rapid Prototyping</span>
+          <span class="tag">Electronics</span>
+          <span class="tag">Art & Installation</span>
+        </div>
+        <div class="about-stats reveal reveal-delay-3">
+          <div><div class="stat-num">5+</div><div class="stat-label">Projects</div></div>
+          <div><div class="stat-num">100K+</div><div class="stat-label">Views</div></div>
+          <div><div class="stat-num">2</div><div class="stat-label">Majors</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header reveal">
+      <span class="section-number">[ 03 ]</span>
+      <h2 class="section-title">Contact</h2>
+    </div>
+    <div class="contact-inner">
+      <div>
+        <h3 class="contact-heading reveal">Let's<br>work<br>together.</h3>
+        <p class="contact-note reveal reveal-delay-1">
+          Open to internships, collaborations, and creative engineering projects.
+          Currently based in Troy, NY — available for opportunities nationwide.
+        </p>
+        <div class="contact-links reveal reveal-delay-2">
+          <!-- CHANGE THIS: replace with your real email -->
+          <a href="/cdn-cgi/l/email-protection#fe87918b8cbe9b939f9792d09d9193" class="contact-link"><span class="__cf_email__" data-cfemail="b3cadcc6c1f3d6ded2dadf9dd0dcde">[email&#160;protected]</span></a>
+          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" class="contact-link">LinkedIn</a>
+          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" class="contact-link">Instructables</a>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-delay-1">
+        <!-- Sign up at formspree.io and replace YOUR_FORM_ID -->
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form-row">
+            <label for="fname">Name</label>
+            <input type="text" id="fname" name="name" required placeholder="Jane Smith">
+          </div>
+          <div class="form-row">
+            <label for="femail">Email</label>
+            <input type="email" id="femail" name="email" required placeholder="jane@example.com">
+          </div>
+          <div class="form-row">
+            <label for="fmsg">Message</label>
+            <textarea id="fmsg" name="message" required placeholder="Tell me about your project…"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">
+            Send message <span class="arrow">→</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-copy">© 2025 Gaetano Hamilton. All rights reserved.</span>
+    <a href="#hero" class="footer-back">Back to top ↑</a>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Custom cursor with dark/light auto-switching ───────────
+    const cursor = document.getElementById('cursor');
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+
+      // Check which section the cursor is currently over
+      // and switch colour accordingly
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const inDark = el && el.closest('#about') !== null;
+      cursor.classList.toggle('light', inDark);
+    });
+
+    function addHover()  { cursor.classList.add('hover'); }
+    function remHover()  { cursor.classList.remove('hover'); }
+    function bindHover() {
+      document.querySelectorAll('a, button, input, textarea, .portfolio-item').forEach(el => {
+        el.removeEventListener('mouseenter', addHover);
+        el.removeEventListener('mouseleave', remHover);
+        el.addEventListener('mouseenter', addHover);
+        el.addEventListener('mouseleave', remHover);
+      });
+    }
+    bindHover();
+
+    // ── Nav scroll border ──────────────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+    // ── Scroll reveal ──────────────────────────────────────────
+    if ('IntersectionObserver' in window) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('hidden'));
+      const ro = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+    }
+
+    // ── Modal ──────────────────────────────────────────────────
+    const modal      = document.getElementById('modal');
+    const modalClose = document.getElementById('modal-close');
+    const elTitle    = document.getElementById('modal-title');
+    const elTag      = document.getElementById('modal-tag');
+    const elDesc     = document.getElementById('modal-desc');
+    const elMeta     = document.getElementById('modal-meta');
+    const elImages   = document.getElementById('modal-images');
+    const elBarLabel = document.getElementById('modal-bar-label');
+    const prevBtn    = document.getElementById('modal-prev');
+    const nextBtn    = document.getElementById('modal-next');
+
+    let savedScrollY = 0, currentIdx = 0;
+    const allItems = Array.from(document.querySelectorAll('.portfolio-item'));
+
+    function shiftHex(hex, amt) {
+      hex = hex.replace('#','');
+      if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+      const r = Math.min(255, Math.max(0, parseInt(hex.slice(0,2),16)+amt));
+      const g = Math.min(255, Math.max(0, parseInt(hex.slice(2,4),16)+amt));
+      const b = Math.min(255, Math.max(0, parseInt(hex.slice(4,6),16)+amt));
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function buildBlock(cls, color, src, alt) {
+      const block = document.createElement('div');
+      block.className = `modal-img-block ${cls}`;
+      if (src) {
+        const img = document.createElement('img');
+        img.src = src; img.alt = alt; block.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'ph';
+        ph.style.cssText = `background:${color};width:100%;height:100%;`;
+        block.appendChild(ph);
+      }
+      return block;
+    }
+
+    function openModal(item, idx) {
+      const d = item.dataset;
+      currentIdx = idx;
+      elTitle.textContent    = d.title || '';
+      elTag.textContent      = d.tag   || '';
+      elDesc.textContent     = d.desc  || '';
+      elBarLabel.textContent = d.title || 'Project';
+      elMeta.innerHTML = '';
+      [['Year', d.year], ['Role', d.role], ['Category', d.tag]].forEach(([l, v]) => {
+        if (!v) return;
+        elMeta.innerHTML += `<div class="modal-meta-row"><span class="modal-meta-label">${l}</span><span class="modal-meta-value">${v}</span></div>`;
+      });
+      elImages.innerHTML = '';
+      const base = d.color || '#C9C3BA';
+      const thumbImg = item.querySelector('.thumb img');
+     // elImages.appendChild(buildBlock('main', base, thumbImg ? thumbImg.src : null, d.title));
+      const extras = (d.images && d.images.trim()) ? d.images.split(',').map(s=>s.trim()).filter(Boolean) : [];
+      if (extras.length) {
+        extras.forEach((src,i) => elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+2}`)));
+      } else {
+        [0,-18,18].forEach(s => elImages.appendChild(buildBlock('extra', shiftHex(base,s), null, '')));
+      }
+      prevBtn.style.visibility = idx > 0 ? 'visible' : 'hidden';
+      nextBtn.style.visibility = idx < allItems.length-1 ? 'visible' : 'hidden';
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+      elImages.scrollTop = 0;
+      bindHover();
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      window.scrollTo(0, savedScrollY);
+    }
+
+    function navigate(dir) {
+      const next = currentIdx + dir;
+      if (next >= 0 && next < allItems.length) openModal(allItems[next], next);
+    }
+
+    allItems.forEach((item, i) => {
+      item.addEventListener('click', () => { savedScrollY = window.scrollY; openModal(item, i); });
+    });
+    modalClose.addEventListener('click', closeModal);
+    prevBtn.addEventListener('click', () => navigate(-1));
+    nextBtn.addEventListener('click', () => navigate(1));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft')  navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+  </script>
+</body>
+</html>
