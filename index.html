@@ -13,12 +13,43 @@
       --fg:           #111111;
       --muted:        #888880;
       --border:       #DDDBD5;
+      --modal-bg:     #ffffff;
+      --red:          #0047AB;
       --font-display: 'Bebas Neue', sans-serif;
+      --font-hero:    'Bebas Neue', sans-serif; /* ← change this to swap just the big hero/section titles */
       --font-mono:    'DM Mono', monospace;
-      --font-body:    'DM Sans', sans-serif;
+      --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
     }
+
+    /* ── DARK MODE ─────────────────────────────────────────────── */
+    body.dark-mode {
+      --bg:       #111111;
+      --fg:       #F5F3EE;
+      --muted:    #777770;
+      --border:   #2A2A28;
+      --modal-bg: #1a1a1a;
+      --red:      #0047AB;
+    }
+
+
+    body.dark-mode #about { background: #0a0a0a; }
+    body.dark-mode #about .section-title { color: rgba(255,255,255,0.9); }
+    body.dark-mode #about .about-name    { color: rgba(255,255,255,0.9); }
+    body.dark-mode #about .about-bio     { color: rgba(245,243,238,0.75); }
+    body.dark-mode #about .about-link    { color: rgba(255,255,255,0.45); }
+    body.dark-mode #about .tag           { color: rgba(255,255,255,0.5); }
+    body.dark-mode #about .stat-num      { color: rgba(255,255,255,0.9); }
+    body.dark-mode #about .stat-label    { color: rgba(255,255,255,0.3); }
+
+
+    body.dark-mode #modal { background: var(--modal-bg); }
+    body.dark-mode .modal-bar { background: var(--modal-bg); }
+    body.dark-mode .modal-desc { color: #aaa; }
+    body.dark-mode #about { background: #0a0a0a; }
+    body.dark-mode .hero-bg { background: linear-gradient(135deg, #1c1c1a 0%, #2a2826 100%); }
+    body.dark-mode .hero-bg::after { background: linear-gradient(to top, rgba(17,17,17,0.75) 0%, transparent 55%); }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -63,7 +94,7 @@
     }
     #cursor.hover.light {
       background: transparent;
-      border-color: #A90000;
+      border-color: #fff;
     }
 
     /* ── GRAIN ─────────────────────────────────────────────────── */
@@ -85,8 +116,7 @@
       z-index: 200;
     }
     nav.scrolled { border-color: var(--border); }
-    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.08em; line-height: 1; }
-    .nav-logo span { opacity: 0.35; }
+    
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
       font-family: var(--font-mono); font-size: 0.7rem;
@@ -97,11 +127,91 @@
     .nav-links a:hover { color: var(--fg); }
     .nav-links a:hover::after { width: 100%; }
 
-    /* ── HERO ──────────────────────────────────────────────────── */
+    /* ── DARK MODE TOGGLE ──────────────────────────────────────── */
+    #dark-toggle {
+      background: var(--red); border: none;
+      width: 48px; height: 24px; border-radius: 999px;
+      position: relative; flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+    #dark-toggle .toggle-thumb {
+      position: absolute; top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff;
+      transition: left 0.3s ease;
+      left: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    body.dark-mode #dark-toggle .toggle-thumb { left: 28px; }
+    #dark-toggle .toggle-icon {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #dark-toggle .icon-sun  { left: 6px; opacity: 1; }
+    #dark-toggle .icon-moon { right: 6px; opacity: 1; }
+    body.dark-mode #dark-toggle .icon-sun  { opacity: 0; }
+    body.dark-mode #dark-toggle .icon-moon { opacity: 1; }
+
+    /* ── NAV LOGO RED CIRCLE ───────────────────────────────────── */
+    .nav-logo {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--red); display: block; flex-shrink: 0;
+      transition: transform 0.2s ease;
+      visibility: hidden; /* hidden — replaced by #hero-orb animation */
+    }
+    .nav-logo:hover { transform: scale(1.12); }
+
+    /* ── HERO ORB (morphing red circle) ── remove #hero-orb + JS block to disable ── */
+    #hero-orb {
+      position: fixed;
+      border-radius: 50%;
+      background: var(--red);
+      z-index: 300;
+      cursor: none;
+      /* size and position driven by JS via CSS custom properties */
+      width:  var(--orb-size, 180px);
+      height: var(--orb-size, 180px);
+      top:    var(--orb-y, 50%);
+      left:   var(--orb-x, 50%);
+      transform: translate(-50%, -50%);
+      transition: width  0.5s linear,
+                  height 0.5s linear,
+                  top    0.5s linear,
+                  left   0.5s linear;
+      opacity: 0; /* fades in on load */
+      animation: orbAppear 0.9s 0.4s ease forwards;
+    }
+    @keyframes orbAppear { to { opacity: 1; } }
+    #hero-orb:hover { filter: brightness(1.1); }
+    /* ── END HERO ORB ───────────────────────────────────────────── */
+
+    /* ── MODAL BAR LOGO ────────────────────────────────────────── */
+    .modal-logo {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--red); display: block; flex-shrink: 0;
+      transition: transform 0.2s ease; text-decoration: none;
+    }
+    .modal-logo:hover { transform: scale(1.12); }
+    .modal-bar-center {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ── DOT MATRIX ────────────────────────────────────────────── */
+    .hero-layout { position: relative; z-index: 100; }
+    #dot-matrix {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; display: block; pointer-events: none;
+    }
     #hero {
       min-height: 100svh; display: flex; flex-direction: column;
       justify-content: flex-end;
-      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 3vw, 3rem) clamp(3rem, 6vw, 6rem);
+      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 6vw, 6rem) clamp(3rem, 6vw, 6rem);
       position: relative; overflow: hidden;
     }
     .hero-bg {
@@ -110,14 +220,14 @@
       background: linear-gradient(135deg, #e8e4dc 0%, #c8c0b4 100%);
     }
     .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(245,243,238,0.65) 0%, transparent 55%); }
-    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+    .hero-content { max-width: 560px; }
     .hero-label {
       font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
       opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
     }
     .hero-title {
-      font-family: var(--font-display); font-size: clamp(4rem, 10vw, 11rem);
+      font-family: var(--font-hero); font-size: clamp(4rem, 10vw, 11rem);
       line-height: 0.92; letter-spacing: 0.02em;
       opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
     }
@@ -141,7 +251,7 @@
     section { padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 3vw, 3rem); }
     .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--border); padding-top: 1.5rem; }
     .section-number { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
-    .section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: 0.04em; line-height: 1; }
+    .section-title { font-family: var(--font-hero); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: 0.04em; line-height: 1; }
 
     /* ── REVEAL (visible by default, animated if observer works) ─ */
     .reveal { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -179,7 +289,7 @@
     /* ── PROJECT MODAL ─────────────────────────────────────────── */
     #modal {
       position: fixed; inset: 0;
-      background: #fff; z-index: 1000;
+      background: var(--modal-bg); z-index: 1000;
       display: flex; flex-direction: column;
       opacity: 0; pointer-events: none;
       transition: opacity 0.35s ease;
@@ -189,13 +299,13 @@
     .modal-bar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 clamp(1.5rem, 3vw, 3rem);
-      height: var(--nav-h); flex-shrink: 0;
-      border-bottom: 1px solid var(--border); background: #fff; z-index: 10;
+      height: var(--nav-h); flex-shrink: 0; position: relative;
+      border-bottom: 1px solid var(--border); background: var(--modal-bg); z-index: 10;
     }
     .modal-bar-title { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
     #modal-close {
       width: 44px; height: 44px;
-      background: var(--fg); color: #fff; border: none;
+      background: var(--red); color: #fff; border: none;
       font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; transition: opacity 0.2s;
@@ -211,8 +321,7 @@
       display: flex; flex-direction: column; gap: 1.5rem;
       border-right: 1px solid var(--border);
     }
-    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #FFFFFF; }
-// var(--border); }
+    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff); }
     .modal-img-block.main  { aspect-ratio: 2/1.2; }
     .modal-img-block.extra { aspect-ratio: 2/1.1; }
     .modal-img-block img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -240,7 +349,7 @@
     .about-image { aspect-ratio: 3/4; overflow: hidden; background: #222; }
     .about-image-placeholder { width: 100%; height: 100%; background: linear-gradient(160deg,#222,#2e2e2e); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
     .about-text { padding-top: 1rem; }
-    .about-name { font-family: var(--font-display); font-size: clamp(3rem,6vw,7rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2.5rem; }
+    .about-name { font-family: var(--font-hero); font-size: clamp(3rem,6vw,7rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2.5rem; }
     .about-bio { font-size: clamp(0.85rem,1.2vw,1rem); line-height: 1.85; color: rgba(245,243,238,0.75); max-width: 500px; margin-bottom: 2rem; }
     .about-links { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 3rem; }
     .about-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); transition: color 0.2s; display: flex; align-items: center; gap: 0.75rem; }
@@ -256,7 +365,7 @@
     /* ── CONTACT ───────────────────────────────────────────────── */
     #contact { background: var(--bg); }
     .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,8rem); align-items: start; }
-    .contact-heading { font-family: var(--font-display); font-size: clamp(3rem,7vw,8rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2rem; }
+    .contact-heading { font-family: var(--font-hero); font-size: clamp(3rem,7vw,8rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2rem; }
     .contact-note { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); line-height: 1.8; max-width: 340px; }
     .contact-links { margin-top: 3rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .contact-link { display: flex; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--muted); transition: color 0.2s; }
@@ -303,8 +412,9 @@
   <!-- PROJECT MODAL -->
   <div id="modal" role="dialog" aria-modal="true">
     <div class="modal-bar">
-      <span class="modal-bar-title" id="modal-bar-label">Project</span>
-      <button id="modal-close" aria-label="Close">X</button>
+      <a href="#hero" class="modal-logo" aria-label="Home" onclick="closeModal()"></a>
+      <span class="modal-bar-center" id="modal-bar-label">Project</span>
+      <button id="modal-close" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
       <div class="modal-images" id="modal-images"></div>
@@ -323,27 +433,43 @@
     </div>
   </div>
 
+  <!-- ── HERO ORB — remove this element + the JS block below to disable ── -->
+  <a id="hero-orb" href="#hero" aria-label="Back to top"></a>
+  <!-- ── END HERO ORB ───────────────────────────────────────────────────── -->
+
   <!-- NAV -->
   <nav id="nav">
-    <a href="#hero" class="nav-logo">GH<span> ®</span></a>
+    <a href="#hero" class="nav-logo" aria-label="Home"></a>
     <ul class="nav-links">
       <li><a href="#work">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button id="dark-toggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
+      </span>
+      <span class="toggle-thumb"></span>
+      <span class="toggle-icon icon-moon">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--red)" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </span>
+    </button>
   </nav>
 
   <!-- HERO -->
   <section id="hero">
     <div class="hero-bg"></div>
-    <div class="hero-content">
-      <p class="hero-label">Designer · Engineer · Artist</p>
-      <h1 class="hero-title">GAETANO<br><em>HAMILTON</em></h1>
-      <p class="hero-sub">
-        Mechanical Engineering &amp; Design, Innovation, and Society.<br>
-        Rensselaer Polytechnic Institute — Senior.<br>
-        Merging engineering precision with creative problem-solving.
-      </p>
+//    <canvas id="dot-matrix" aria-hidden="true"></canvas>
+    <div class="hero-layout">
+      <div class="hero-content">
+        <p class="hero-label">Designer · Engineer · Artist</p>
+        <h1 class="hero-title">GAETANO<br><em>HAMILTON</em></h1>
+        <p class="hero-sub">
+          Mechanical Engineering &amp; Design, Innovation, and Society.<br>
+          Rensselaer Polytechnic Institute — Senior.<br>
+          Merging engineering precision with creative problem-solving.
+        </p>
+      </div>
     </div>
     <span class="hero-scroll">Scroll</span>
   </section>
@@ -376,10 +502,9 @@
            data-role="Design, Prototyping, User Testing"
            data-desc="Collaborated to create a no-tie sneaker, enhancing accessibility for users with limited dexterity. Designed and 3D printed tightening mechanisms, and integrated them into hand-sewn shoes. Conducted user testing, gathered feedback, and iterated upon the design based on results."
            data-color="#C4B9AA"
-           data-images="">
+           data-images="Slide5.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG,Slide9.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#C4B9AA;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="solemates.jpg" alt="Solemates"> -->
+          <img src="solemates.jpg" alt="Solemates">
         </div>
         <div class="item-info">
           <span class="item-name">Solemates</span>
@@ -396,10 +521,9 @@
            data-role="Design, Prototyping"
            data-desc="Designed and developed accessible jewelry clasps to assist users with limited hand dexterity in independently wearing necklaces and bracelets. Focused on inclusive design principles, iterating through prototypes to balance usability, aesthetics, and function."
            data-color="#C9BFB6"
-           data-images="">
+           data-images="Slide10.JPG,Slide11.JPG,Slide12.JPG,Slide13.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#C9BFB6;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="jewelry-clasps.jpg" alt="Accessible Jewelry Clasps"> -->
+          <img src="jewelry.jpg" alt="Accessible Jewelry Clasps">
         </div>
         <div class="item-info">
           <span class="item-name">Accessible Jewelry Clasps</span>
@@ -418,8 +542,7 @@
            data-color="#A89F94"
            data-images="">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#A89F94;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="gear-clock.jpg" alt="Gravity-Powered Wooden Gear Clock"> -->
+          <img src="clock.jpg" alt="Gravity-Powered Wooden Gear Clock">
         </div>
         <div class="item-info">
           <span class="item-name">Wooden Gear Clock</span>
@@ -436,10 +559,9 @@
            data-role="Design, Fabrication"
            data-desc="Designed and hand-crafted a series of paper lantern lamps combining traditional lantern-making techniques with contemporary form. Each lamp explores the interplay of light, shadow, and material — producing dynamic lighting effects from delicate folded paper structures."
            data-color="#D6CEBC"
-           data-images="">
+           data-images="Slide30.JPG,Slide31.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#D6CEBC;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="paper-lanterns.jpg" alt="Paper Lantern Lamps"> -->
+          <img src="Slide30.JPG" alt="Paper Lantern Lamps">
         </div>
         <div class="item-info">
           <span class="item-name">Paper Lantern Lamps</span>
@@ -456,10 +578,9 @@
            data-role="Concept, Design, Fabrication"
            data-desc="Conceptualized and developed a hydro-powered installation that translates water flow into sound through a design studio project. Combined art and engineering to inspire curiosity and showcase water's regenerative power. Received interest and guidance for future expansion through art registries and residencies."
            data-color="#9EAAB0"
-           data-images="">
+           data-images="Slide26.JPG,Slide27.JPG,Slide28.JPG,Slide29.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#9EAAB0;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="hydro-curiosity.jpg" alt="Hydro-Powered Curiosity"> -->
+          <img src="water.jpg" alt="Hydro-Powered Curiosity">
         </div>
         <div class="item-info">
           <span class="item-name">Hydro-Powered Curiosity</span>
@@ -495,10 +616,9 @@
            data-role="Team Lead, Design & Engineering"
            data-desc="Led a team in designing an ornithopter — a flapping-wing aircraft — for crop monitoring and pest control. Engineered and tested a mechanical flapping mechanism that mimics bird flight, and communicated project challenges and solutions to stakeholders throughout the process."
            data-color="#B8B5AE"
-           data-images="">
+           data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#B8B5AE;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="ornithopter.jpg" alt="Agricultural Ornithopter"> -->
+          <img src="orno.PNG" alt="Agricultural Ornithopter"> 
         </div>
         <div class="item-info">
           <span class="item-name">Agricultural Ornithopter</span>
@@ -515,10 +635,9 @@
            data-role="Concept, Design, Prototyping"
            data-desc="Developed the Scents-ory toy series — a collection of sensory toys designed to engage children through scent, texture, and play. Explored multi-sensory design principles to create products that support developmental play while being engaging, safe, and delightful."
            data-color="#C8C2B8"
-           data-images="">
+           data-images="Slide18.JPG,Slide19.JPG,Slide20.JPG,Slide21.JPG,Slide22.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#C8C2B8;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="scentsory.jpg" alt="Scents-ory Toy Series"> -->
+          <img src="Slide18.JPG" alt="Scents-ory Toy Series">
         </div>
         <div class="item-info">
           <span class="item-name">Scents-ory Toy Series</span>
@@ -794,7 +913,7 @@
       elImages.innerHTML = '';
       const base = d.color || '#C9C3BA';
       const thumbImg = item.querySelector('.thumb img');
-     // elImages.appendChild(buildBlock('main', base, thumbImg ? thumbImg.src : null, d.title));
+      //       elImages.appendChild(buildBlock('main', base, thumbImg ? thumbImg.src : null, d.title));
       const extras = (d.images && d.images.trim()) ? d.images.split(',').map(s=>s.trim()).filter(Boolean) : [];
       if (extras.length) {
         extras.forEach((src,i) => elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+2}`)));
@@ -831,6 +950,142 @@
       if (e.key === 'ArrowLeft')  navigate(-1);
       if (e.key === 'ArrowRight') navigate(1);
     });
+
+    // ── Dark mode toggle ───────────────────────────────────────
+    const darkToggle = document.getElementById('dark-toggle');
+    darkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // ── HERO ORB — remove this block + #hero-orb element + CSS to disable ──
+    (function() {
+      const orb = document.getElementById('hero-orb');
+      const nav = document.getElementById('nav');
+      const hero = document.getElementById('hero');
+
+      // Large size shown in hero
+      const ORB_LARGE = Math.min(260, window.innerWidth * .25);
+      // Small size matching nav logo
+      const ORB_SMALL = 28;
+
+      // Get the nav logo's position (the invisible placeholder keeps its spot in the layout)
+      function getNavLogoPos() {
+        const logo = nav.querySelector('.nav-logo');
+        const r = logo.getBoundingClientRect();
+        return {
+          x: r.left + r.width  / 2,
+          y: r.top  + r.height / 2
+        };
+      }
+
+      // Get the hero orb's resting large position (right side of hero, vertically centered)
+        function getHeroPos() {
+          const title = document.querySelector('.hero-title');
+          const r = title.getBoundingClientRect();
+          return {
+            x: r.right + ORB_LARGE * 0.5,  // ← to the right of your name
+            y: r.top   + r.height * 0.45,    // ← vertically centered on your name
+          };
+        }
+      function update() {
+        const heroRect = hero.getBoundingClientRect();
+        // progress: 0 = fully in hero, 1 = scrolled past hero
+        const progress = Math.min(1, Math.max(0, -heroRect.top / (heroRect.height * 0.5)));
+
+        const heroPos = getHeroPos();
+        const navPos  = getNavLogoPos();
+
+        const size = ORB_LARGE + (ORB_SMALL - ORB_LARGE) * progress;
+        const x    = heroPos.x + (navPos.x - heroPos.x) * progress;
+        const y    = heroPos.y + (navPos.y - heroPos.y) * progress;
+
+        orb.style.setProperty('--orb-size', size + 'px');
+        orb.style.setProperty('--orb-x',    x    + 'px');
+        orb.style.setProperty('--orb-y',    y    + 'px');
+
+        // Pass through clicks when large (in hero) — don't block hero content
+        orb.style.pointerEvents = progress > 0.95 ? 'auto' : 'none';
+      }
+
+      // On click: smooth scroll to top, orb animates back down
+      orb.addEventListener('click', (e) => {
+        e.preventDefault();
+        // temporarily override transition to be extra smooth for the return
+        orb.style.transition = [
+          'width  1s cubic-bezier(0.4, 0, 0.2, 1)',
+          'height 1s cubic-bezier(0.4, 0, 0.2, 1)',
+          'top    1s cubic-bezier(0.4, 0, 0.2, 1)',
+          'left   1s cubic-bezier(0.4, 0, 0.2, 1)'
+        ].join(', ');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          orb.style.transition = '';
+        }, 1100);
+      });
+
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      // Small delay so getBoundingClientRect is accurate after fonts/layout settle
+      setTimeout(update, 100);
+    })();
+    // ── END HERO ORB ──────────────────────────────────────────────
+
+    // ── Dot matrix canvas (full-hero, subtle, monochrome) ──────
+  /*  (function() {
+      const canvas = document.getElementById('dot-matrix');
+      const ctx = canvas.getContext('2d');
+      const SPACING = 28, R = 1.5;
+      const RADIUS_NEAR = 180;
+      let mouse = { x: -9999, y: -9999 };
+      let cols, rows;
+
+      function resize() {
+        const hero = document.getElementById('hero');
+        canvas.width  = hero.offsetWidth;
+        canvas.height = hero.offsetHeight;
+        cols = Math.ceil(canvas.width  / SPACING) + 1;
+        rows = Math.ceil(canvas.height / SPACING) + 1;
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const isDark = document.body.classList.contains('dark-mode');
+        const rect = canvas.getBoundingClientRect();
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const cx = col * SPACING;
+            const cy = row * SPACING;
+            const worldX = rect.left + cx;
+            const worldY = rect.top  + cy;
+            const dist = Math.hypot(mouse.x - worldX, mouse.y - worldY);
+
+            let alpha, radius;
+            if (dist < RADIUS_NEAR) {
+              const t = 1 - dist / RADIUS_NEAR;
+              alpha  = 0.05 + t * 0.22;
+              radius = R + t * R * 0.8;
+            } else {
+              alpha  = 0.05;
+              radius = R;
+            }
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.fillStyle = isDark
+              ? `rgba(245,243,238,${alpha})`
+              : `rgba(17,17,17,${alpha})`;
+            ctx.fill();
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+      resize();
+      draw();
+    })();      */
   </script>
 </body>
 </html>
