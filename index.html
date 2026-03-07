@@ -403,6 +403,12 @@
       .about-grid { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
     }
+    @media (hover: none) {
+      #cursor { display: none; }
+      #hero-orb { display: none; }
+      body { cursor: auto; }
+      a, button, input, textarea, .portfolio-item { cursor: auto; }
+    }
   </style>
 </head>
 <body>
