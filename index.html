@@ -4,17 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gaetano Hamilton — Portfolio</title>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:           #F5F3EE;
-      --fg:           #111111;
-      --muted:        #888880;
-      --border:       #DDDBD5;
-      --modal-bg:     #ffffff;
-      --red:          #0047AB;
+      --bg:           #F0e5c7;
+      --light:        #F0e5c7;
+      --fg:           #473F34;
+      --muted:        #8c9657; /*6D8196 888880;*/
+      --border:       #473F34;
+      --modal-bg:     #F0e5c7;
+      --red:          #473F34;
+      --mouse:        #FF802E;
       --font-display: 'Bebas Neue', sans-serif;
       --font-hero:    'Bebas Neue', sans-serif; /* ← change this to swap just the big hero/section titles */
       --font-mono:    'DM Mono', monospace;
@@ -25,34 +33,25 @@
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
     body.dark-mode {
-      --bg:       #111111;
-      --fg:       #F5F3EE;
-      --muted:    #777770;
-      --border:   #2A2A28;
-      --modal-bg: #1a1a1a;
-      --red:      #0047AB;
+      --bg:       #473F34;
+      --light:    #F0e5c7;
+      --fg:       #F0e5c7;
+      --muted:    #8c9657;
+      --border:   #F0e5c7;
+      --modal-bg: #473F34;
+      --red:      #F0e5c7;
     }
-
-
-    body.dark-mode #about { background: #0a0a0a; }
-    body.dark-mode #about .section-title { color: rgba(255,255,255,0.9); }
-    body.dark-mode #about .about-name    { color: rgba(255,255,255,0.9); }
-    body.dark-mode #about .about-bio     { color: rgba(245,243,238,0.75); }
-    body.dark-mode #about .about-link    { color: rgba(255,255,255,0.45); }
-    body.dark-mode #about .tag           { color: rgba(255,255,255,0.5); }
-    body.dark-mode #about .stat-num      { color: rgba(255,255,255,0.9); }
-    body.dark-mode #about .stat-label    { color: rgba(255,255,255,0.3); }
 
 
     body.dark-mode #modal { background: var(--modal-bg); }
     body.dark-mode .modal-bar { background: var(--modal-bg); }
     body.dark-mode .modal-desc { color: #aaa; }
-    body.dark-mode #about { background: #0a0a0a; }
-    body.dark-mode .hero-bg { background: linear-gradient(135deg, #1c1c1a 0%, #2a2826 100%); }
-    body.dark-mode .hero-bg::after { background: linear-gradient(to top, rgba(17,17,17,0.75) 0%, transparent 55%); }
+    body.dark-mode .hero-bg { background: var(--bg); }
+  /*  body.dark-mode .hero-bg::after { background: linear-gradient(to top, rgba(17,17,17,0.75) 0%, transparent 55%); } */
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
     body {
       background: var(--bg);
       color: var(--fg);
@@ -64,6 +63,180 @@
       cursor: none;
     }
     body.modal-open { overflow: hidden; }
+
+    /* ── PAGE RULER ─────────────────────────────────────────────── */
+    #page-ruler {
+      position: fixed;
+      right: 0; top: 0;
+      width: 20px;
+      height: 100vh;
+      z-index: 5000;
+      overflow: hidden;
+      transition: opacity 0.2s ease;
+    }
+    #page-ruler.hidden { opacity: 0; pointer-events: none; }
+    #page-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #page-ruler-block {
+      position: absolute;
+      right: 0;
+      width: 20px;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #page-ruler-block:active { cursor: grabbing; }
+
+    /* ── MODAL RULER ────────────────────────────────────────────── */
+    .modal-body {
+      display: grid; grid-template-columns: 1fr 20px 360px;
+      height: calc(100vh - var(--nav-h)); overflow: hidden;
+    }
+    #modal-ruler {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-left: none;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+    }
+    #modal-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #modal-ruler-block {
+      position: absolute;
+      left: 0; right: 0;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #modal-ruler-block:active { cursor: grabbing; }
+    /* ── END RULER ──────────────────────────────────────────────── */
+
+    /* ── LIGHTBOX ───────────────────────────────────────────────── */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 20000;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #lightbox.open { display: flex; }
+
+    #lightbox-img {
+      max-width: calc(100vw - 120px);
+      max-height: calc(100vh - 100px);
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Prev / Next arrows */
+    .lb-arrow {
+      position: fixed;
+      top: 50%; transform: translateY(-50%);
+      background: none; border: none;
+      color: rgba(255,255,255,0.55);
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      padding: 1rem 1.2rem;
+      cursor: none;
+      transition: color 0.15s;
+      z-index: 20001;
+      line-height: 1;
+    }
+    .lb-arrow:hover { color: #fff; }
+    #lb-prev { left: 0; }
+    #lb-next { right: 0; }
+    .lb-arrow.hidden { opacity: 0; pointer-events: none; }
+
+    /* Close button */
+    #lb-close {
+      position: fixed;
+      top: 16px; right: 20px;
+      background: none; border: none;
+      color: rgba(255,255,255,0.55);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: none;
+      padding: 6px 10px;
+      transition: color 0.15s;
+      z-index: 20001;
+    }
+    #lb-close:hover { color: #fff; }
+
+    /* Counter e.g. "2 / 5" */
+    #lb-counter {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.4);
+      pointer-events: none;
+      z-index: 20001;
+    }
+
+    /* Hint shown only on first open */
+    #lb-hint {
+      position: fixed;
+      bottom: 44px; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.28);
+      pointer-events: none;
+      z-index: 20001;
+      white-space: nowrap;
+      transition: opacity 0.6s;
+    }
+    #lb-hint.fade { opacity: 0; }
+
+    /* Images in modal become clickable */
+    .modal-img-block img { cursor: none; }
+    /* ── END LIGHTBOX ────────────────────────────────────────────── */
     a { color: inherit; text-decoration: none; }
     a, button, input, textarea, .portfolio-item { cursor: none; }
 
@@ -78,7 +251,7 @@
       transition: width 0.18s ease, height 0.18s ease,
                   background 0.3s ease, border-color 0.3s ease;
       z-index: 99999;
-      background: var(--fg);
+      background: var(--mouse);
       border: 1.5px solid transparent;
     }
     /* Light mode (default — dark pages) */
@@ -90,7 +263,7 @@
     #cursor.hover {
       width: 30px; height: 30px;
       background: transparent;
-      border-color: var(--fg);
+      border-color: var(--mouse);
     }
     #cursor.hover.light {
       background: transparent;
@@ -126,10 +299,13 @@
     .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--fg); transition: width 0.25s ease; }
     .nav-links a:hover { color: var(--fg); }
     .nav-links a:hover::after { width: 100%; }
+    /* Active section indicator */
+    .nav-links a.active { color: var(--red); }
+    .nav-links a.active::after { width: 100%; background: var(--red); }
 
     /* ── DARK MODE TOGGLE ──────────────────────────────────────── */
     #dark-toggle {
-      background: var(--red); border: none;
+      background: var(--muted); border: none;
       width: 48px; height: 24px; border-radius: 999px;
       position: relative; flex-shrink: 0;
       transition: background 0.3s ease;
@@ -137,106 +313,116 @@
     #dark-toggle .toggle-thumb {
       position: absolute; top: 4px;
       width: 16px; height: 16px; border-radius: 50%;
-      background: #fff;
-      transition: left 0.3s ease;
+      background: var(--light);
+      transition: left 0.5s ease;
       left: 4px;
       display: flex; align-items: center; justify-content: center;
     }
     body.dark-mode #dark-toggle .toggle-thumb { left: 28px; }
     #dark-toggle .toggle-icon {
       position: absolute; top: 50%; transform: translateY(-50%);
-      transition: opacity 0.2s;
+      transition: opacity .1s;
       display: flex; align-items: center; justify-content: center;
       pointer-events: none;
       z-index: 1;
     }
     #dark-toggle .icon-sun  { left: 6px; opacity: 1; }
-    #dark-toggle .icon-moon { right: 6px; opacity: 1; }
+    #dark-toggle .icon-moon { right: 6px; opacity: 0; }
     body.dark-mode #dark-toggle .icon-sun  { opacity: 0; }
     body.dark-mode #dark-toggle .icon-moon { opacity: 1; }
 
-    /* ── NAV LOGO RED CIRCLE ───────────────────────────────────── */
+    /* ── NAV LOGO — GAETANO text fades in when hero scrolls away ── */
+    /*   Tune: font-size, color, letter-spacing                      */
     .nav-logo {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--red); display: block; flex-shrink: 0;
-      transition: transform 0.2s ease;
-      visibility: hidden; /* hidden — replaced by #hero-orb animation */
+      font-family: var(--font-hero);
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--red);
+      display: block; flex-shrink: 0;
+      opacity: 0;
+      pointer-events: none;
     }
-    .nav-logo:hover { transform: scale(1.12); }
-
-    /* ── HERO ORB (morphing red circle) ── remove #hero-orb + JS block to disable ── */
-    #hero-orb {
-      position: fixed;
-      border-radius: 50%;
-      background: var(--red);
-      z-index: 300;
-      cursor: none;
-      /* size and position driven by JS via CSS custom properties */
-      width:  var(--orb-size, 180px);
-      height: var(--orb-size, 180px);
-      top:    var(--orb-y, 50%);
-      left:   var(--orb-x, 50%);
-      transform: translate(-50%, -50%);
-      transition: width  0.5s linear,
-                  height 0.5s linear,
-                  top    0.5s linear,
-                  left   0.5s linear;
-      opacity: 0; /* fades in on load */
-      animation: orbAppear 0.9s 0.4s ease forwards;
-    }
-    @keyframes orbAppear { to { opacity: 1; } }
-    #hero-orb:hover { filter: brightness(1.1); }
-    /* ── END HERO ORB ───────────────────────────────────────────── */
-
+    .nav-logo:hover { color: var(--muted); }
     /* ── MODAL BAR LOGO ────────────────────────────────────────── */
-    .modal-logo {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--red); display: block; flex-shrink: 0;
-      transition: transform 0.2s ease; text-decoration: none;
+        .modal-logo {
+      font-family: var(--font-hero);
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--red);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: opacity 0.2s ease;
     }
-    .modal-logo:hover { transform: scale(1.12); }
+    .modal-logo:hover { color: var(--muted); }
     .modal-bar-center {
       position: absolute; left: 50%; transform: translateX(-50%);
       font-family: var(--font-mono); font-size: 0.7rem;
       letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
     }
 
-    /* ── DOT MATRIX ────────────────────────────────────────────── */
-    .hero-layout { position: relative; z-index: 100; }
-    #dot-matrix {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      z-index: 0; display: block; pointer-events: none;
-    }
+    /* ── HERO ──────────────────────────────────────────────────── */
+    .hero-layout { position: relative; z-index: 100; width: 100%; }
     #hero {
       min-height: 100svh; display: flex; flex-direction: column;
-      justify-content: flex-end;
-      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 6vw, 6rem) clamp(3rem, 6vw, 6rem);
+      justify-content: center;
+      padding: calc(var(--nav-h) + 2rem) clamp(1.5rem, 6vw, 6rem) clamp(3rem, 6vw, 5rem);
       position: relative; overflow: hidden;
     }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
-      /* ---- CHANGE THIS: add background-image: url('your-hero.jpg'); background-size: cover; ---- */
-      background: linear-gradient(135deg, #e8e4dc 0%, #c8c0b4 100%);
+      background: var(--bg);
     }
-    .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(245,243,238,0.65) 0%, transparent 55%); }
-    .hero-content { max-width: 560px; }
+  /*  .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(245,243,238,0.65) 0%, transparent 55%); } */
+
+    /* Two-column layout: name left, bio right */
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: clamp(2rem, 4vw, 6rem);
+      align-items: end;
+    }
+    .hero-left {}
     .hero-label {
       font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem;
       opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
     }
     .hero-title {
-      font-family: var(--font-hero); font-size: clamp(4rem, 10vw, 11rem);
+      font-family: var(--font-hero); font-size: clamp(3.5rem, 8vw, 10rem);
       line-height: 0.92; letter-spacing: 0.02em;
       opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
     }
+    /* GAETANO in blue — fades out as you scroll away */
+    /* Tune color here: ↓ */
+    .hero-first-name { color: var(--red); display: inline-block; }
     .hero-title em { font-style: normal; color: var(--muted); }
-    .hero-sub {
-      margin-top: 2rem; font-family: var(--font-mono); font-size: 0.75rem;
-      letter-spacing: 0.08em; color: var(--muted); max-width: 420px; line-height: 1.9;
-      opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.8s ease forwards;
+
+    /* Right column — bio, links, tags, stats */
+    .hero-right {
+      display: flex; flex-direction: column; gap: 1.5rem;
+      opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s 0.7s ease forwards;
+      padding-bottom: 0.5rem;
     }
+    .hero-sub {
+      font-family: var(--font-mono); font-size: 0.75rem;
+      letter-spacing: 0.08em; color: var(--muted); line-height: 1.9;
+    }
+    .hero-about-links { display: flex; flex-direction: column; gap: 0.45rem; }
+    .hero-about-link {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      letter-spacing: 0.12em; color: var(--fg);
+      transition: color 0.2s; display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-about-link::before { content: '→'; }
+    .hero-about-link:hover { color: var(--muted); }
+    .hero-about-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .hero-about-tag {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--muted); padding: 0.3rem 0.75rem;
+      color: var(--muted); transition: border-color 0.2s, color 0.2s;
+    }
+    .hero-about-tag:hover { border-color: var(--muted); color: var(--fg); }
     .hero-scroll {
       position: absolute; bottom: clamp(2rem,4vw,4rem); right: clamp(1.5rem,3vw,3rem);
       display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
@@ -248,7 +434,12 @@
     @keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom} }
 
     /* ── SECTIONS ──────────────────────────────────────────────── */
-    section { padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 3vw, 3rem); }
+    section {
+      padding-top:    clamp(2rem, 4vw, 3rem);  /* ← reduce this */
+      padding-bottom: clamp(5rem, 10vw, 10rem);
+      padding-left:   clamp(1.5rem, 3vw, 3rem);
+      padding-right:  clamp(1.5rem, 3vw, 3rem);
+    }
     .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: clamp(3rem, 6vw, 6rem); border-top: 1px solid var(--border); padding-top: 1.5rem; }
     .section-number { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; }
     .section-title { font-family: var(--font-hero); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: 0.04em; line-height: 1; }
@@ -282,8 +473,8 @@
     .portfolio-item:hover .thumb .thumb-placeholder { transform: scale(1.04); }
     .thumb-placeholder { width: 100%; height: 100%; }
     .item-info { padding: 0.85rem 0 0.2rem; display: flex; justify-content: space-between; align-items: baseline; }
-    .item-name { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    .item-tag  { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    .item-name { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+    .item-tag  { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--red); }
     .item-desc { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.5; }
 
     /* ── PROJECT MODAL ─────────────────────────────────────────── */
@@ -305,23 +496,21 @@
     .modal-bar-title { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
     #modal-close {
       width: 44px; height: 44px;
-      background: var(--red); color: #fff; border: none;
+      background: var(--red); color: var(--bg); border: none;
       font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; transition: opacity 0.2s;
     }
-    #modal-close:hover { opacity: 0.65; }
-    .modal-body {
-      display: grid; grid-template-columns: 1fr 360px;
-      height: calc(100vh - var(--nav-h)); overflow: hidden;
-    }
+    #modal-close:hover { background: var(--muted); }
+    /* modal-body grid defined in ruler section above */
     .modal-images {
       overflow-y: auto;
+      scrollbar-width: none;
       padding: clamp(2rem, 4vw, 4rem);
       display: flex; flex-direction: column; gap: 1.5rem;
-      border-right: 1px solid var(--border);
     }
-    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff); }
+    .modal-images::-webkit-scrollbar { display: none; }
+    .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff; }
     .modal-img-block.main  { aspect-ratio: 2/1.2; }
     .modal-img-block.extra { aspect-ratio: 2/1.1; }
     .modal-img-block img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -332,7 +521,7 @@
     }
     .modal-project-title { font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 0.03em; line-height: 0.95; }
     .modal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-    .modal-desc { font-size: 0.88rem; line-height: 1.9; color: #444; }
+    .modal-desc { font-size: 0.88rem; line-height: 1.9; color: var(--fg); }
     .modal-meta { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .modal-meta-row { display: flex; justify-content: space-between; align-items: baseline; }
     .modal-meta-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
@@ -341,26 +530,7 @@
     .modal-nav-btn { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); background: none; border: none; transition: color 0.2s; }
     .modal-nav-btn:hover { color: var(--fg); }
 
-    /* ── ABOUT (dark section) ──────────────────────────────────── */
-    #about { background: var(--fg); color: var(--bg); }
-    #about .section-header { border-color: rgba(255,255,255,0.15); }
-    #about .section-number { color: rgba(255,255,255,0.3); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,6vw,8rem); align-items: start; }
-    .about-image { aspect-ratio: 3/4; overflow: hidden; background: #222; }
-    .about-image-placeholder { width: 100%; height: 100%; background: linear-gradient(160deg,#222,#2e2e2e); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.2); text-transform: uppercase; }
-    .about-text { padding-top: 1rem; }
-    .about-name { font-family: var(--font-hero); font-size: clamp(3rem,6vw,7rem); letter-spacing: 0.03em; line-height: 0.9; margin-bottom: 2.5rem; }
-    .about-bio { font-size: clamp(0.85rem,1.2vw,1rem); line-height: 1.85; color: rgba(245,243,238,0.75); max-width: 500px; margin-bottom: 2rem; }
-    .about-links { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 3rem; }
-    .about-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); transition: color 0.2s; display: flex; align-items: center; gap: 0.75rem; }
-    .about-link::before { content: '→'; }
-    .about-link:hover { color: rgba(255,255,255,0.9); }
-    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 3rem; }
-    .tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 0.9rem; color: rgba(255,255,255,0.5); transition: border-color 0.2s, color 0.2s; }
-    .tag:hover { border-color: rgba(255,255,255,0.6); color: rgba(255,255,255,0.9); }
-    .about-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; }
-    .stat-num { font-family: var(--font-display); font-size: clamp(2rem,3vw,3.5rem); letter-spacing: 0.04em; line-height: 1; }
-    .stat-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 0.3rem; }
+    /* ── ABOUT section CSS kept for reference but section removed ── */
 
     /* ── CONTACT ───────────────────────────────────────────────── */
     #contact { background: var(--bg); }
@@ -394,36 +564,150 @@
     /* ── RESPONSIVE ────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .modal-body { grid-template-columns: 1fr; height: auto; overflow: visible; }
-      #modal { overflow-y: auto; }
+      #modal { overflow-y: auto; scrollbar-width: none; }
+      #modal::-webkit-scrollbar { display: none; }
+      #modal-ruler { display: none; }
       .modal-images { height: auto; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
       .modal-info { overflow: visible; }
     }
     @media (max-width: 768px) {
       .nav-links { display: none; }
-      .about-grid { grid-template-columns: 1fr; }
+      .hero-inner { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
     }
     @media (hover: none) {
       #cursor { display: none; }
-      #hero-orb { display: none; }
       body { cursor: auto; }
       a, button, input, textarea, .portfolio-item { cursor: auto; }
     }
+
+
+    /* ══ DIMENSION MODE (press D to toggle) ══════════════════════
+       Tune all visuals here:
+         --dim-color         line / text / border color
+         --dim-bg            label pill background color
+         --dim-size          label font size
+         --dim-opacity       overall opacity of boxes, lines, arrows (0–1)
+         --dim-label-opacity label pill background opacity only (0–1)
+       ══════════════════════════════════════════════════════════ */
+    :root {
+      --dim-color:        #0047AB;
+      --dim-bg:           #F0e5c7;
+      --dim-size:         8.5px;
+      --dim-opacity:      0.85;
+      --dim-label-opacity: 0.92;  /* label pill background opacity — tune independently */
+    }
+    /* Layout highlight boxes — position set by JS (fixed for modal, absolute for page) */
+    .dim-box {
+      pointer-events: none;
+      z-index: 7990;
+      opacity: var(--dim-opacity);
+      box-sizing: border-box;
+    }
+    .dim-box.pad  { background: rgba(0,71,171,0.07); border: 1px dashed rgba(0,71,171,0.35); }
+    .dim-box.elem { background: transparent;          border: 1px solid  rgba(0,71,171,0.55); }
+    /* Dimension lines */
+    /* dim-line replaced by inline SVG with arrowheads */
+    /* Labels */
+    .dim-label {
+      position: fixed;
+      font-family: 'DM Mono', monospace;
+      font-size: var(--dim-size);
+      letter-spacing: 0.04em;
+      color: var(--dim-color);
+      background: var(--dim-bg);
+      border: 1px solid var(--dim-color);
+      padding: 1px 4px;
+      pointer-events: none;
+      z-index: 8000;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      opacity: var(--dim-label-opacity);
+    }
+    /* Toast */
+    #dim-toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; background: var(--fg); color: var(--bg);
+      padding: 0.5rem 1.25rem; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease; z-index: 9000;
+    }
+    #dim-toast.show { opacity: 1; }
+
+    /* Highlighted box (nearest to cursor) */
+    .dim-box.dim-hot {
+      background: rgba(0,71,171,0.13) !important;
+      border-color: var(--dim-color) !important;
+      border-style: solid !important;
+    }
+    /* CAD crosshair */
+    #dim-crossH, #dim-crossV {
+      display: none; position: fixed;
+      background: var(--dim-color); opacity: 0.28;
+      pointer-events: none; z-index: 8010;
+    }
+    #dim-crossH { height: 1px; left: 0; width: 100vw; }
+    #dim-crossV { width:  1px; top:  0; height: 100vh; }
+    /* Coordinate readout */
+    #dim-coords {
+      display: none; position: fixed;
+      font-family: 'DM Mono', monospace; font-size: var(--dim-size);
+      letter-spacing: 0.06em; color: var(--dim-color);
+      background: var(--dim-bg); border: 1px solid var(--dim-color);
+      padding: 2px 6px; pointer-events: none; z-index: 8020;
+      white-space: nowrap; opacity: var(--dim-opacity);
+    }
+    /* ══ END DIMENSION MODE ══════════════════════════════════════ */
+
+    
   </style>
 </head>
 <body>
 
   <div id="cursor"></div>
 
+  <!-- ══ PAGE RULER ══ -->
+  <div id="page-ruler">
+    <canvas id="page-ruler-canvas"></canvas>
+    <div id="page-ruler-block">0.0 cm</div>
+  </div>
+  <!-- ══ END PAGE RULER ══ -->
+
+
+
+<!-- ══ DIMENSION MODE toast ══ -->
+<div id="dim-toast"></div>
+<div id="dim-crossH"></div>
+<div id="dim-crossV"></div>
+<div id="dim-coords"></div>
+<!-- ══ END DIMENSION MODE ══ -->
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="lightbox">
+  <button id="lb-close">✕ close</button>
+  <button class="lb-arrow" id="lb-prev">&#8592;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lb-arrow" id="lb-next">&#8594;</button>
+  <div id="lb-counter"></div>
+  <div id="lb-hint">← → to browse &nbsp;·&nbsp; esc to close</div>
+</div>
+<!-- ══ END LIGHTBOX ══ -->
+
+
+
   <!-- PROJECT MODAL -->
   <div id="modal" role="dialog" aria-modal="true">
     <div class="modal-bar">
-      <a href="#hero" class="modal-logo" aria-label="Home" onclick="closeModal()"></a>
+      <a href="#hero" class="modal-logo" id="modal-logo" aria-label="Home">GAETANO</a>
       <span class="modal-bar-center" id="modal-bar-label">Project</span>
       <button id="modal-close" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
       <div class="modal-images" id="modal-images"></div>
+      <div id="modal-ruler">
+        <canvas id="modal-ruler-canvas"></canvas>
+        <div id="modal-ruler-block">0.0 cm</div>
+      </div>
       <div class="modal-info">
         <div>
           <p class="modal-tag"            id="modal-tag"></p>
@@ -439,42 +723,72 @@
     </div>
   </div>
 
-  <!-- ── HERO ORB — remove this element + the JS block below to disable ── -->
-  <a id="hero-orb" href="#hero" aria-label="Back to top"></a>
-  <!-- ── END HERO ORB ───────────────────────────────────────────────────── -->
-
   <!-- NAV -->
   <nav id="nav">
-    <a href="#hero" class="nav-logo" aria-label="Home"></a>
+    <a href="#hero" class="nav-logo" aria-label="Home">GAETANO</a>
     <ul class="nav-links">
-      <li><a href="#work">Work</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#hero"    data-section="hero">Home</a></li>
+      <li><a href="#work"    data-section="work">Work</a></li>
+      <li><a href="#contact" data-section="contact">Contact</a></li>
     </ul>
     <button id="dark-toggle" aria-label="Toggle dark mode">
       <span class="toggle-icon icon-sun">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill= var(--muted) stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
       </span>
       <span class="toggle-thumb"></span>
       <span class="toggle-icon icon-moon">
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--red)" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="var(--muted)" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </span>
     </button>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO — left: name, right: bio/links/tags/stats, all on one screen -->
   <section id="hero">
     <div class="hero-bg"></div>
-//    <canvas id="dot-matrix" aria-hidden="true"></canvas>
     <div class="hero-layout">
-      <div class="hero-content">
-        <p class="hero-label">Designer · Engineer · Artist</p>
-        <h1 class="hero-title">GAETANO<br><em>HAMILTON</em></h1>
-        <p class="hero-sub">
-          Mechanical Engineering &amp; Design, Innovation, and Society.<br>
-          Rensselaer Polytechnic Institute — Senior.<br>
-          Merging engineering precision with creative problem-solving.
-        </p>
+      <div class="hero-inner">
+
+        <!-- LEFT: name -->
+   
+        <div class="hero-left">
+          <p class="hero-label">Designer · Engineer · Artist</p>
+          <h1 class="hero-title">
+            <span class="hero-first-name" aria-hidden="true">GAETANO</span><br>
+            <em>HAMILTON</em>
+          </h1>
+          <p class="hero-sub">
+            Mechanical Engineering &amp; Industrial Design.<br>
+            Rensselaer Polytechnic Institute — Graduating May 2026.
+          </p>
+   
+        </div>
+
+        <!-- RIGHT: bio, links, tags, stats -->
+        <!-- ── Edit your bio, links, tags and stats here ── -->
+        <div class="hero-right">
+          <p class="hero-sub">
+            I'm a dual major student at RPI, studying Mechanical Engineering and
+            Design, Innovation, &amp; Society. I thrive in collaborative environments,
+            bringing curiosity and innovation to every project — from flapping-wing
+            aircraft to hydro-powered sound installations.
+          </p>
+          <div class="hero-about-links">
+            <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="hero-about-link">LinkedIn</a>
+            <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="hero-about-link">Instructables</a>
+            <a href="https://files.cargocollective.com/c2030723/Gaetano_Hamilton_Resume.pdf" target="_blank" rel="noopener noreferrer" class="hero-about-link">Download Resume</a>
+          </div>
+          <div class="hero-about-tags">
+            <span class="hero-about-tag">Mechanical Engineering</span>
+            <span class="hero-about-tag">Product Design</span>
+            <span class="hero-about-tag">CAD &amp; 3D Modeling</span>
+            <span class="hero-about-tag">Rapid Prototyping</span>
+            <span class="hero-about-tag">Electronics</span>
+            <span class="hero-about-tag">Art &amp; Installation</span>
+          </div>
+          
+        </div>
+        <!-- ── End editable section ── -->
+
       </div>
     </div>
     <span class="hero-scroll">Scroll</span>
@@ -733,52 +1047,10 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="section-header reveal">
-      <span class="section-number">[ 02 ]</span>
-      <h2 class="section-title">About</h2>
-    </div>
-    <div class="about-grid">
-      <div class="about-image reveal">
-        <!-- CHANGE THIS: <img src="your-photo.jpg" alt="Gaetano Hamilton"> -->
-        <div class="about-image-placeholder">Your photo here</div>
-      </div>
-      <div class="about-text">
-        <h3 class="about-name reveal">GAETANO<br>HAMILTON</h3>
-        <p class="about-bio reveal reveal-delay-1">
-          I'm a dual major student at RPI, studying Mechanical Engineering and
-          Design, Innovation, &amp; Society, with a deep interest in merging
-          engineering and design. I thrive in collaborative environments,
-          bringing curiosity and innovation to every project — from
-          flapping-wing aircraft to hydro-powered sound installations.
-        </p>
-        <div class="about-links reveal reveal-delay-1">
-          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" class="about-link">LinkedIn</a>
-          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" class="about-link">Instructables</a>
-          <a href="https://files.cargocollective.com/c2030723/Gaetano_Hamilton_Resume.pdf" target="_blank" class="about-link">Download Resume</a>
-        </div>
-        <div class="about-tags reveal reveal-delay-2">
-          <span class="tag">Mechanical Engineering</span>
-          <span class="tag">Product Design</span>
-          <span class="tag">CAD & 3D Modeling</span>
-          <span class="tag">Rapid Prototyping</span>
-          <span class="tag">Electronics</span>
-          <span class="tag">Art & Installation</span>
-        </div>
-        <div class="about-stats reveal reveal-delay-3">
-          <div><div class="stat-num">5+</div><div class="stat-label">Projects</div></div>
-          <div><div class="stat-num">100K+</div><div class="stat-label">Views</div></div>
-          <div><div class="stat-num">2</div><div class="stat-label">Majors</div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CONTACT -->
   <section id="contact">
     <div class="section-header reveal">
-      <span class="section-number">[ 03 ]</span>
+      <span class="section-number">[ 02 ]</span>
       <h2 class="section-title">Contact</h2>
     </div>
     <div class="contact-inner">
@@ -791,8 +1063,8 @@
         <div class="contact-links reveal reveal-delay-2">
           <!-- CHANGE THIS: replace with your real email -->
           <a href="/cdn-cgi/l/email-protection#fe87918b8cbe9b939f9792d09d9193" class="contact-link"><span class="__cf_email__" data-cfemail="b3cadcc6c1f3d6ded2dadf9dd0dcde">[email&#160;protected]</span></a>
-          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" class="contact-link">LinkedIn</a>
-          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" class="contact-link">Instructables</a>
+          <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="contact-link">LinkedIn</a>
+          <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="contact-link">Instructables</a>
         </div>
       </div>
       <div class="contact-form reveal reveal-delay-1">
@@ -841,7 +1113,7 @@
     function addHover()  { cursor.classList.add('hover'); }
     function remHover()  { cursor.classList.remove('hover'); }
     function bindHover() {
-      document.querySelectorAll('a, button, input, textarea, .portfolio-item').forEach(el => {
+      document.querySelectorAll('a, button, input, textarea, .portfolio-item, .modal-img-block img').forEach(el => {
         el.removeEventListener('mouseenter', addHover);
         el.removeEventListener('mouseleave', remHover);
         el.addEventListener('mouseenter', addHover);
@@ -849,10 +1121,6 @@
       });
     }
     bindHover();
-
-    // ── Nav scroll border ──────────────────────────────────────
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
 
     // ── Scroll reveal ──────────────────────────────────────────
     if ('IntersectionObserver' in window) {
@@ -865,9 +1133,50 @@
       document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
     }
 
-    // ── Modal ──────────────────────────────────────────────────
-    const modal      = document.getElementById('modal');
+    // ── Merged scroll handler (nav border + active nav + hero crossfade) ──
+    // Single rAF-throttled listener replaces three separate scroll listeners
+    (function () {
+      const nav      = document.getElementById('nav');
+      const navLinks = document.querySelectorAll('.nav-links a[data-section]');
+      const sections = ['hero','work','contact'].map(id => document.getElementById(id));
+      const heroName = document.querySelector('.hero-first-name');
+      const navLogo  = document.querySelector('.nav-logo');
+      const hero     = document.getElementById('hero');
+      // Tune: px from hero bottom where fade starts / ends
+      const FADE_START = 600, FADE_END = 500;
+      let ticking = false;
+
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          // Nav border
+          nav.classList.toggle('scrolled', window.scrollY > 20);
+
+          // Active nav section
+          const mid = window.innerHeight * 0.4;
+          let current = 'hero';
+          sections.forEach(sec => {
+            if (sec && sec.getBoundingClientRect().top <= mid) current = sec.id;
+          });
+          navLinks.forEach(a => a.classList.toggle('active', a.dataset.section === current));
+
+          // Hero name crossfade
+          const heroBottom = hero.getBoundingClientRect().bottom;
+          const progress   = Math.min(1, Math.max(0, (FADE_START - heroBottom) / (FADE_START - FADE_END)));
+          heroName.style.opacity      = 1 - progress;
+          navLogo.style.opacity       = progress;
+          navLogo.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+
+          ticking = false;
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
     const modalClose = document.getElementById('modal-close');
+    const modalLogo  = document.getElementById('modal-logo');
     const elTitle    = document.getElementById('modal-title');
     const elTag      = document.getElementById('modal-tag');
     const elDesc     = document.getElementById('modal-desc');
@@ -895,6 +1204,7 @@
       if (src) {
         const img = document.createElement('img');
         img.src = src; img.alt = alt; block.appendChild(img);
+        img.addEventListener('click', () => lbOpen(img.src));
       } else {
         const ph = document.createElement('div');
         ph.className = 'ph';
@@ -902,6 +1212,20 @@
         block.appendChild(ph);
       }
       return block;
+    }
+
+    function makeMetaRow(label, value) {
+      const row   = document.createElement('div');
+      row.className = 'modal-meta-row';
+      const lEl = document.createElement('span');
+      lEl.className   = 'modal-meta-label';
+      lEl.textContent = label;
+      const vEl = document.createElement('span');
+      vEl.className   = 'modal-meta-value';
+      vEl.textContent = value;
+      row.appendChild(lEl);
+      row.appendChild(vEl);
+      return row;
     }
 
     function openModal(item, idx) {
@@ -913,21 +1237,18 @@
       elBarLabel.textContent = d.title || 'Project';
       elMeta.innerHTML = '';
       [['Year', d.year], ['Role', d.role], ['Category', d.tag]].forEach(([l, v]) => {
-        if (!v) return;
-        elMeta.innerHTML += `<div class="modal-meta-row"><span class="modal-meta-label">${l}</span><span class="modal-meta-value">${v}</span></div>`;
+        if (v) elMeta.appendChild(makeMetaRow(l, v));
       });
       elImages.innerHTML = '';
-      const base = d.color || '#C9C3BA';
-      const thumbImg = item.querySelector('.thumb img');
-      //       elImages.appendChild(buildBlock('main', base, thumbImg ? thumbImg.src : null, d.title));
+      const base   = d.color || '#C9C3BA';
       const extras = (d.images && d.images.trim()) ? d.images.split(',').map(s=>s.trim()).filter(Boolean) : [];
       if (extras.length) {
-        extras.forEach((src,i) => elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+2}`)));
+        extras.forEach((src, i) => elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+1}`)));
       } else {
         [0,-18,18].forEach(s => elImages.appendChild(buildBlock('extra', shiftHex(base,s), null, '')));
       }
-      prevBtn.style.visibility = idx > 0 ? 'visible' : 'hidden';
-      nextBtn.style.visibility = idx < allItems.length-1 ? 'visible' : 'hidden';
+      prevBtn.style.visibility = idx > 0                  ? 'visible' : 'hidden';
+      nextBtn.style.visibility = idx < allItems.length-1  ? 'visible' : 'hidden';
       modal.classList.add('open');
       document.body.classList.add('modal-open');
       elImages.scrollTop = 0;
@@ -949,10 +1270,14 @@
       item.addEventListener('click', () => { savedScrollY = window.scrollY; openModal(item, i); });
     });
     modalClose.addEventListener('click', closeModal);
+    modalLogo.addEventListener('click',  closeModal);
     prevBtn.addEventListener('click', () => navigate(-1));
     nextBtn.addEventListener('click', () => navigate(1));
+    // Modal keydown — only fires when lightbox is NOT open
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeModal();
+      if (document.getElementById('lightbox').classList.contains('open')) return;
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'Escape')     closeModal();
       if (e.key === 'ArrowLeft')  navigate(-1);
       if (e.key === 'ArrowRight') navigate(1);
     });
@@ -963,135 +1288,698 @@
       document.body.classList.toggle('dark-mode');
     });
 
-    // ── HERO ORB — remove this block + #hero-orb element + CSS to disable ──
-    (function() {
-      const orb = document.getElementById('hero-orb');
-      const nav = document.getElementById('nav');
-      const hero = document.getElementById('hero');
 
-      // Large size shown in hero
-      const ORB_LARGE = Math.min(260, window.innerWidth * .25);
-      // Small size matching nav logo
-      const ORB_SMALL = 28;
+    // ══ DIMENSION MODE — press D to toggle ═══════════════════════
+    (function () {
+      const toast  = document.getElementById('dim-toast');
+      const crossH = document.getElementById('dim-crossH');
+      const crossV = document.getElementById('dim-crossV');
+      const coords = document.getElementById('dim-coords');
 
-      // Get the nav logo's position (the invisible placeholder keeps its spot in the layout)
-      function getNavLogoPos() {
-        const logo = nav.querySelector('.nav-logo');
-        const r = logo.getBoundingClientRect();
-        return {
-          x: r.left + r.width  / 2,
-          y: r.top  + r.height / 2
-        };
+      let active     = false;
+      let mode       = 'page';
+      let boxList    = [];   // [{ el, r }]  permanent boxes
+      let dimMarkers = [];   // transient dim lines/labels for hovered box
+      let hotBox     = null; // currently highlighted box entry
+
+      function px(v) { return Math.round(v) + 'px'; }
+
+      function navH()      { const n = document.getElementById('nav');       return n ? n.getBoundingClientRect().bottom : 52; }
+      function modalBarH() { const b = document.querySelector('.modal-bar'); return b ? b.getBoundingClientRect().bottom : 52; }
+
+      // ── Create a permanent box overlay ──────────────────────────
+      // isFixed=true  → element is CSS position:fixed (e.g. nav).
+      //                  Box drawn position:fixed, rect stored in viewport-space.
+      // isFixed=false → normal document element.
+      //                  Box drawn position:absolute, rect stored in document-space.
+      // Modal mode always uses fixed positioning (modal is a fixed overlay).
+      function addBox(r, cls, minY, isFixed) {
+        const isModal  = (mode === 'modal');
+        const useFixed = isModal || isFixed;
+        const sy       = useFixed ? 0 : window.scrollY;
+
+        // r values are viewport-space (from getBoundingClientRect).
+        // minY is the nav bottom in viewport-space — only clip elements that
+        // actually overlap it. Elements fully above viewport have negative r.bottom
+        // but are still real elements; don't skip them.
+        if (r.width < 2 || r.bottom <= r.top) return;
+        const clampedTop = (minY != null && r.bottom > minY) ? Math.max(minY, r.top) : r.top;
+        if (r.bottom <= clampedTop) return;
+
+        const el = document.createElement('div');
+        el.className = 'dim-box ' + cls;
+        Object.assign(el.style, {
+          position:      useFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none',
+          boxSizing:     'border-box',
+          left:          r.left + 'px',
+          top:           (clampedTop + sy) + 'px',
+          width:         r.width + 'px',
+          height:        (r.bottom - clampedTop) + 'px',
+          zIndex:        7990,
+          opacity:       'var(--dim-opacity)'
+        });
+        document.body.appendChild(el);
+
+        // Store in document-space for hit-testing.
+        boxList.push({ el, r: {
+          left:   r.left,
+          right:  r.right,
+          top:    r.top    + sy,
+          bottom: r.bottom + sy,
+          width:  r.width,
+          height: r.height
+        }, useFixed });
       }
 
-      // Get the hero orb's resting large position (right side of hero, vertically centered)
-        function getHeroPos() {
-          const title = document.querySelector('.hero-title');
-          const r = title.getBoundingClientRect();
-          return {
-            x: r.right + ORB_LARGE * 0.5,  // ← to the right of your name
-            y: r.top   + r.height * 0.45,    // ← vertically centered on your name
-          };
+      // ── SVG arrowhead marker — injected once ─────────────────────
+      let _svgDefs = null;
+      function ensureDefs() {
+        if (_svgDefs) return;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.style.cssText = 'position:fixed;width:0;height:0;overflow:visible;pointer-events:none;z-index:7990;';
+        svg.innerHTML = `<defs>
+          <marker id="dim-arr-end" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--dim-color)"/>
+          </marker>
+          <marker id="dim-arr-start" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto-start-reverse">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--dim-color)"/>
+          </marker>
+        </defs>`;
+        document.body.appendChild(svg);
+        _svgDefs = svg;
+        dimMarkers.push(svg); // cleaned up with dims
+      }
+
+      // Draw an SVG dim line with arrows at both ends
+      // coords are always document-space; posFixed=true for modal
+      function drawSVGLine(x1, y1, x2, y2, isHoriz, posFixed) {
+        ensureDefs();
+        const PAD = 8;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const minX = Math.min(x1, x2), minY = Math.min(y1, y2);
+        const w    = Math.max(Math.abs(x2 - x1), 1);
+        const h    = Math.max(Math.abs(y2 - y1), 1);
+        const OVF  = 10;
+        const pos  = posFixed ? 'fixed' : 'absolute';
+        svg.style.cssText = `position:${pos};pointer-events:none;z-index:7995;overflow:visible;opacity:var(--dim-opacity);left:${minX - OVF}px;top:${minY - OVF}px;width:${w + OVF*2}px;height:${h + OVF*2}px;`;
+        const lx1 = x1 - minX + OVF, ly1 = y1 - minY + OVF;
+        const lx2 = x2 - minX + OVF, ly2 = y2 - minY + OVF;
+        let ax1 = lx1, ay1 = ly1, ax2 = lx2, ay2 = ly2;
+        if (isHoriz) {
+          ax1 = lx1 < lx2 ? lx1 + PAD : lx1 - PAD;
+          ax2 = lx2 > lx1 ? lx2 - PAD : lx2 + PAD;
+        } else {
+          ay1 = ly1 < ly2 ? ly1 + PAD : ly1 - PAD;
+          ay2 = ly2 > ly1 ? ly2 - PAD : ly2 + PAD;
         }
-      function update() {
-        const heroRect = hero.getBoundingClientRect();
-        // progress: 0 = fully in hero, 1 = scrolled past hero
-        const progress = Math.min(1, Math.max(0, -heroRect.top / (heroRect.height * 0.5)));
-
-        const heroPos = getHeroPos();
-        const navPos  = getNavLogoPos();
-
-        const size = ORB_LARGE + (ORB_SMALL - ORB_LARGE) * progress;
-        const x    = heroPos.x + (navPos.x - heroPos.x) * progress;
-        const y    = heroPos.y + (navPos.y - heroPos.y) * progress;
-
-        orb.style.setProperty('--orb-size', size + 'px');
-        orb.style.setProperty('--orb-x',    x    + 'px');
-        orb.style.setProperty('--orb-y',    y    + 'px');
-
-        // Pass through clicks when large (in hero) — don't block hero content
-        orb.style.pointerEvents = progress > 0.95 ? 'auto' : 'none';
+        svg.innerHTML = `<line x1="${ax1}" y1="${ay1}" x2="${ax2}" y2="${ay2}"
+          stroke="var(--dim-color)" stroke-width="1"
+          marker-start="url(#dim-arr-start)" marker-end="url(#dim-arr-end)"/>`;
+        document.body.appendChild(svg);
+        dimMarkers.push(svg);
       }
 
-      // On click: smooth scroll to top, orb animates back down
-      orb.addEventListener('click', (e) => {
-        e.preventDefault();
-        // temporarily override transition to be extra smooth for the return
-        orb.style.transition = [
-          'width  1s cubic-bezier(0.4, 0, 0.2, 1)',
-          'height 1s cubic-bezier(0.4, 0, 0.2, 1)',
-          'top    1s cubic-bezier(0.4, 0, 0.2, 1)',
-          'left   1s cubic-bezier(0.4, 0, 0.2, 1)'
-        ].join(', ');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          orb.style.transition = '';
-        }, 1100);
-      });
+      function dimH(x1, x2, y, label, minY, posFixed) {
+        const sy = Math.max(minY || 0, y);
+        if (x2 - x1 < 40) return;
+        drawSVGLine(x1, sy, x2, sy, true, posFixed);
+        const lb = document.createElement('div');
+        lb.className = 'dim-label';
+        lb.textContent = label;
+        Object.assign(lb.style, {
+          position: posFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none', zIndex: 8000,
+          left: ((x1+x2)/2) + 'px', top: sy + 'px'
+        });
+        document.body.appendChild(lb);
+        dimMarkers.push(lb);
+      }
 
-      window.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update);
-      // Small delay so getBoundingClientRect is accurate after fonts/layout settle
-      setTimeout(update, 100);
-    })();
-    // ── END HERO ORB ──────────────────────────────────────────────
+      function dimV(y1, y2, x, label, minY, posFixed) {
+        const sy1 = Math.max(minY || 0, y1);
+        if (y2 - sy1 < 40) return;
+        drawSVGLine(x, sy1, x, y2, false, posFixed);
+        const lb = document.createElement('div');
+        lb.className = 'dim-label';
+        lb.textContent = label;
+        Object.assign(lb.style, {
+          position: posFixed ? 'fixed' : 'absolute',
+          pointerEvents: 'none', zIndex: 8000,
+          left: x + 'px', top: ((sy1+y2)/2) + 'px'
+        });
+        document.body.appendChild(lb);
+        dimMarkers.push(lb);
+      }
 
-    // ── Dot matrix canvas (full-hero, subtle, monochrome) ──────
-  /*  (function() {
-      const canvas = document.getElementById('dot-matrix');
-      const ctx = canvas.getContext('2d');
-      const SPACING = 28, R = 1.5;
-      const RADIUS_NEAR = 180;
-      let mouse = { x: -9999, y: -9999 };
-      let cols, rows;
+      function clearDims() {
+        dimMarkers.forEach(e => e.remove());
+        dimMarkers = [];
+        _svgDefs = null;
+        if (hotBox) { hotBox.el.classList.remove('dim-hot'); hotBox = null; }
+      }
 
-      function resize() {
+      // ── Draw dims for a hovered box ──────────────────────────────
+      // Each measurement gets its own lane to avoid overlap:
+      //   width  → above the box at top - 16
+      //   height → right of the box at right + 12
+      //   gap-top    → further left  (left - 28), dashed feel via offset x
+      //   gap-bottom → further right (right + 28)
+      //   gap-left   → further above (top - 30)
+      //   gap-right  → further below (bottom + 14)
+      function showDimsFor(entry) {
+        clearDims();
+        hotBox = entry;
+        entry.el.classList.add('dim-hot');
+
+        const posFixed = entry.useFixed;
+        // minY in the same coordinate space as the stored rect
+        const minY = posFixed
+          ? (mode === 'modal' ? modalBarH() : 0)
+          : (mode === 'modal' ? modalBarH() : navH() + window.scrollY);
+
+        const r = entry.r;
+
+        // Own width — lane: above box
+        dimH(r.left, r.right, r.top - 18, px(r.width), minY, posFixed);
+        // Own height — lane: right of box
+        dimV(r.top, r.bottom, r.right + 12, px(r.height), minY, posFixed);
+
+        // Gap lines — nearest neighbour in each direction (same coordinate space)
+        let nearTop = null, nearBottom = null, nearLeft = null, nearRight = null;
+        let dT = Infinity, dB = Infinity, dL = Infinity, dR = Infinity;
+
+        boxList.forEach(b => {
+          if (b === entry || b.useFixed !== posFixed) return; // only compare same space
+          const br = b.r;
+          const hOverlap = r.left < br.right  && r.right  > br.left;
+          const vOverlap = r.top  < br.bottom && r.bottom > br.top;
+          if (hOverlap) {
+            if (br.bottom <= r.top    && r.top   - br.bottom < dT) { dT = r.top    - br.bottom; nearTop    = br.bottom; }
+            if (br.top    >= r.bottom && br.top  - r.bottom  < dB) { dB = br.top   - r.bottom;  nearBottom = br.top;    }
+          }
+          if (vOverlap) {
+            if (br.right  <= r.left   && r.left  - br.right  < dL) { dL = r.left  - br.right;   nearLeft   = br.right;  }
+            if (br.left   >= r.right  && br.left - r.right   < dR) { dR = br.left - r.right;    nearRight  = br.left;   }
+          }
+        });
+
+        if (nearTop    !== null && dT > 1) dimV(nearTop,    r.top,      r.left + r.width  * 0.25, px(dT), minY, posFixed);
+        if (nearBottom !== null && dB > 1) dimV(r.bottom,   nearBottom, r.left + r.width  * 0.75, px(dB), minY, posFixed);
+        if (nearLeft   !== null && dL > 1) dimH(nearLeft,   r.left,     r.top  + r.height * 0.25, px(dL), minY, posFixed);
+        if (nearRight  !== null && dR > 1) dimH(r.right,    nearRight,  r.top  + r.height * 0.75, px(dR), minY, posFixed);
+      }
+
+      // ── Find closest box to mouse cursor ─────────────────────────
+      // mx/my are viewport coords. Fixed rects are viewport-space;
+      // absolute rects are document-space (need scrollY offset).
+      function closestBox(mx, my) {
+        const docY = my + window.scrollY;
+
+        function testY(b) { return b.useFixed ? my : docY; }
+
+        // First pass: smallest box containing the cursor
+        let best = null, bestArea = Infinity;
+        boxList.forEach(b => {
+          const r = b.r;
+          const ty = testY(b);
+          if (mx >= r.left && mx <= r.right && ty >= r.top && ty <= r.bottom) {
+            const area = r.width * r.height;
+            if (area < bestArea) { bestArea = area; best = b; }
+          }
+        });
+        if (best) return { box: best, dist: 0 };
+
+        // Second pass: nearest centre
+        let bestDist = Infinity;
+        boxList.forEach(b => {
+          const r  = b.r;
+          const ty = testY(b);
+          const cx = r.left + r.width  / 2;
+          const cy = r.top  + r.height / 2;
+          const d  = Math.hypot(mx - cx, ty - cy);
+          if (d < bestDist) { bestDist = d; best = b; }
+        });
+        return { box: best, dist: bestDist };
+      }
+
+      // ── Build all permanent boxes (debounced) ────────────────────
+      let _buildTimer = null;
+      function buildBoxes() {
+        clearAll();
+        if (mode === 'modal') buildModalBoxes();
+        else                  buildPageBoxes();
+      }
+      function buildBoxesDebounced() {
+        clearTimeout(_buildTimer);
+        _buildTimer = setTimeout(buildBoxes, 80);
+      }
+
+      function buildPageBoxes() {
+        const sy  = window.scrollY;
+        // navH() returns a viewport value; for fixed elements minY stays viewport-space.
+        const nYv = navH();          // viewport-space nav bottom (for fixed elements)
+        const nYd = nYv + sy;        // document-space nav bottom  (for absolute elements)
+
+        // NAV — position:fixed, so mark isFixed=true; minY is viewport-space
+        const nav = document.getElementById('nav');
+        if (nav) {
+          addBox(nav.getBoundingClientRect(), 'pad', 0, true);
+          nav.querySelectorAll('.nav-logo, .nav-links, #dark-toggle').forEach(el => {
+            addBox(el.getBoundingClientRect(), 'elem', 0, true);
+          });
+        }
+
+        // Helper: measure any element and store in document-space regardless
+        // of whether it's currently in the viewport
+        function pageBox(el, cls) {
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          addBox(r, cls, nYv); // minY in viewport-space; addBox adds sy internally
+        }
+
+        // HERO
         const hero = document.getElementById('hero');
-        canvas.width  = hero.offsetWidth;
-        canvas.height = hero.offsetHeight;
-        cols = Math.ceil(canvas.width  / SPACING) + 1;
-        rows = Math.ceil(canvas.height / SPACING) + 1;
-      }
+        if (hero) {
+          pageBox(hero.querySelector('.hero-left'),  'pad');
+          pageBox(hero.querySelector('.hero-right'), 'pad');
+          ['.hero-title', '.hero-label', '.hero-sub', '.hero-about-links', '.hero-about-tags'].forEach(sel => {
+            pageBox(hero.querySelector(sel), 'elem');
+          });
+        }
 
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const isDark = document.body.classList.contains('dark-mode');
-        const rect = canvas.getBoundingClientRect();
+        // WORK
+        const work = document.getElementById('work');
+        if (work) {
+          pageBox(work.querySelector('.section-title'),  'elem');
+          pageBox(work.querySelector('.section-number'), 'elem');
+        }
+        document.querySelectorAll('.portfolio-item').forEach(item => {
+          ['.thumb', '.item-name', '.item-tag', '.item-desc'].forEach(sel => {
+            pageBox(item.querySelector(sel), 'elem');
+          });
+        });
 
-        for (let row = 0; row < rows; row++) {
-          for (let col = 0; col < cols; col++) {
-            const cx = col * SPACING;
-            const cy = row * SPACING;
-            const worldX = rect.left + cx;
-            const worldY = rect.top  + cy;
-            const dist = Math.hypot(mouse.x - worldX, mouse.y - worldY);
-
-            let alpha, radius;
-            if (dist < RADIUS_NEAR) {
-              const t = 1 - dist / RADIUS_NEAR;
-              alpha  = 0.05 + t * 0.22;
-              radius = R + t * R * 0.8;
-            } else {
-              alpha  = 0.05;
-              radius = R;
-            }
-
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-            ctx.fillStyle = isDark
-              ? `rgba(245,243,238,${alpha})`
-              : `rgba(17,17,17,${alpha})`;
-            ctx.fill();
+        // CONTACT
+        const contact = document.getElementById('contact');
+        if (contact) {
+          pageBox(contact, 'pad');
+          pageBox(contact.querySelector('.section-title'),  'elem');
+          pageBox(contact.querySelector('.section-number'), 'elem');
+          ['.contact-heading', '.contact-note', '.contact-links'].forEach(sel => {
+            pageBox(contact.querySelector(sel), 'elem');
+          });
+          const frm = contact.querySelector('.contact-form');
+          if (frm) {
+            pageBox(frm, 'pad');
+            frm.querySelectorAll('.form-row').forEach(row => pageBox(row, 'elem'));
           }
         }
-        requestAnimationFrame(draw);
+
+        // FOOTER
+        const footer = document.querySelector('footer');
+        if (footer) {
+          pageBox(footer, 'pad');
+          footer.querySelectorAll('span, a').forEach(el => pageBox(el, 'elem'));
+        }
       }
 
-      window.addEventListener('resize', resize);
-      document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-      resize();
-      draw();
-    })();      */
+      function buildModalBoxes() {
+        const mY  = modalBarH();
+        const vH  = window.innerHeight;
+        const modal = document.getElementById('modal');
+        if (!modal || !modal.classList.contains('open')) return;
+
+        const bar = modal.querySelector('.modal-bar');
+        if (bar) {
+          addBox(bar.getBoundingClientRect(), 'pad', 0);
+          ['.modal-logo', '#modal-bar-label', '#modal-close'].forEach(sel => {
+            const el = modal.querySelector(sel);
+            if (el) addBox(el.getBoundingClientRect(), 'elem', 0);
+          });
+        }
+        const info = modal.querySelector('.modal-info');
+        if (info) {
+          addBox(info.getBoundingClientRect(), 'pad', mY);
+          ['#modal-tag', '#modal-title', '#modal-desc', '#modal-meta', '.modal-nav-row'].forEach(sel => {
+            const el = modal.querySelector(sel);
+            if (el) addBox(el.getBoundingClientRect(), 'elem', mY);
+          });
+          modal.querySelectorAll('.modal-meta-row').forEach(row => addBox(row.getBoundingClientRect(), 'elem', mY));
+        }
+        const images = document.getElementById('modal-images');
+        if (images) {
+          addBox(images.getBoundingClientRect(), 'pad', mY);
+          images.querySelectorAll('.modal-img-block').forEach(blk => {
+            const r = blk.getBoundingClientRect();
+            // include if any part is in the visible viewport
+            if (r.bottom >= mY && r.top <= vH && r.height > 2) addBox(r, 'elem', mY);
+          });
+        }
+      }
+
+      function clearAll() {
+        clearDims();
+        boxList.forEach(b => b.el.remove());
+        boxList = [];
+      }
+
+      // ── Mouse: crosshair + nearest-box dims ──────────────────────
+      const HOVER_RADIUS = 120; // px — show dims when cursor within this distance of box centre
+
+      document.addEventListener('mousemove', e => {
+        if (!active) return;
+
+        // Crosshair
+        crossH.style.top  = e.clientY + 'px';
+        crossV.style.left = e.clientX + 'px';
+
+        // Coordinate readout
+        const ox = e.clientX + 16, oy = e.clientY + 16;
+        const cw = coords.offsetWidth  || 90;
+        const ch = coords.offsetHeight || 18;
+        coords.style.left = (ox + cw > window.innerWidth  ? e.clientX - cw - 8 : ox) + 'px';
+        coords.style.top  = (oy + ch > window.innerHeight ? e.clientY - ch - 8 : oy) + 'px';
+        coords.textContent = e.clientX + ', ' + e.clientY;
+
+        // Find closest box; show dims if within radius
+        const { box: nearest, dist } = closestBox(e.clientX, e.clientY);
+        if (nearest && dist < HOVER_RADIUS) {
+          if (nearest !== hotBox) showDimsFor(nearest);
+        } else {
+          if (hotBox) clearDims();
+        }
+      });
+
+      // ── Toggle ───────────────────────────────────────────────────
+      function toggle() {
+        active = !active;
+        crossH.style.display = active ? 'block' : 'none';
+        crossV.style.display = active ? 'block' : 'none';
+        coords.style.display = active ? 'block' : 'none';
+        if (active) { buildBoxes(); showToast('Dimension mode ON — D to exit'); }
+        else        { clearAll();   showToast('Dimension mode OFF'); }
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      // ── Modal observer ───────────────────────────────────────────
+      const modalEl = document.getElementById('modal');
+      if (modalEl) {
+        new MutationObserver(() => {
+          const next = modalEl.classList.contains('open') ? 'modal' : 'page';
+          if (next !== mode) { mode = next; if (active) buildBoxesDebounced(); }
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      const modalImages = document.getElementById('modal-images');
+      if (modalImages) {
+        modalImages.addEventListener('scroll', () => { if (active && mode === 'modal') buildBoxesDebounced(); }, { passive: true });
+      }
+
+      window.addEventListener('resize', () => { if (active) buildBoxesDebounced(); });
+      document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'd' || e.key === 'D') toggle();
+      });
+    })();
+    // ══ END DIMENSION MODE ════════════════════════════════════════
+
+
+    // ══ RULER ═════════════════════════════════════════════════════
+    (function () {
+      const MAJOR_DIV = 10;   // minor ticks per major (major every 10%)
+      const MINOR_CT  = 50;   // total minor ticks (every 2%)
+      const MAJOR_LEN = 10;   // px tick length for major
+      const MINOR_LEN = 5;    // px tick length for minor
+      const BLOCK_H   = 28;   // px height of sliding block
+
+      // ── Draw ruler ticks onto a canvas ─────────────────────────
+      // ticks are evenly spaced 0–100%, labelled at every 10%
+      function drawRuler(canvas, side) {
+        const dpr = window.devicePixelRatio || 1;
+        const h   = canvas.height;
+        const w   = canvas.width;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, w, h);
+
+        // Always read --fg fresh (respects dark mode)
+        const fg = getComputedStyle(document.body)
+                     .getPropertyValue('--fg').trim() || '#473F34';
+        ctx.strokeStyle = fg;
+        ctx.fillStyle   = fg;
+        ctx.lineWidth   = 1 * dpr;
+        ctx.font        = `${6 * dpr}px 'DM Mono', monospace`;
+        ctx.textAlign   = side === 'right' ? 'right' : 'left';
+
+        for (let i = 0; i <= MINOR_CT; i++) {
+          const pct      = i / MINOR_CT;
+          const y        = Math.round(pct * (h / dpr - 1)) * dpr;
+          const isMajor  = i % MAJOR_DIV === 0;
+          const tickLen  = (isMajor ? MAJOR_LEN : MINOR_LEN) * dpr;
+
+          ctx.beginPath();
+          if (side === 'right') { ctx.moveTo(w, y); ctx.lineTo(w - tickLen, y); }
+          else                  { ctx.moveTo(0, y); ctx.lineTo(tickLen, y); }
+          ctx.stroke();
+
+          if (isMajor) {
+            const label = (pct * 100).toFixed(0);
+            const tx = side === 'right' ? w - MAJOR_LEN * dpr - 2 * dpr
+                                        : MAJOR_LEN * dpr + 2 * dpr;
+            ctx.fillText(label, tx, y - 2 * dpr);
+          }
+        }
+
+        // Spine line
+        ctx.beginPath();
+        if (side === 'right') { ctx.moveTo(w - 0.5*dpr, 0); ctx.lineTo(w - 0.5*dpr, h); }
+        else                  { ctx.moveTo(0.5*dpr, 0);      ctx.lineTo(0.5*dpr, h); }
+        ctx.stroke();
+      }
+
+      // ── Draggable scrollbar setup ───────────────────────────────
+      function makeDraggable(block, rulerEl, onDrag) {
+        let dragging = false, startY = 0, startTop = 0;
+
+        block.addEventListener('mousedown', e => {
+          dragging  = true;
+          startY    = e.clientY;
+          startTop  = parseInt(block.style.top) || 0;
+          block.style.transition = 'none';
+          e.preventDefault();
+        });
+        document.addEventListener('mousemove', e => {
+          if (!dragging) return;
+          const trackH  = rulerEl.clientHeight - BLOCK_H;
+          const newTop  = Math.max(0, Math.min(trackH, startTop + (e.clientY - startY)));
+          const frac    = trackH > 0 ? newTop / trackH : 0;
+          block.style.top = newTop + 'px';
+          onDrag(frac);
+        });
+        document.addEventListener('mouseup', () => {
+          if (dragging) { dragging = false; block.style.transition = ''; }
+        });
+      }
+
+      // ── Setup a ruler (page or modal) ───────────────────────────
+      function setupRuler({ canvas, block, rulerEl, getScrollPx, getScrollMax, setScroll, side }) {
+        function resize() {
+          const dpr = window.devicePixelRatio || 1;
+          const h   = rulerEl.clientHeight;
+          const w   = rulerEl.clientWidth;
+          canvas.width  = w * dpr;
+          canvas.height = h * dpr;
+          canvas.style.width  = w + 'px';
+          canvas.style.height = h + 'px';
+          drawRuler(canvas, side);
+        }
+
+        function update() {
+          const scrollPx = getScrollPx();
+          const maxPx    = getScrollMax();
+          const viewH    = rulerEl.clientHeight;
+          const frac     = maxPx > 0 ? scrollPx / maxPx : 0;
+          const trackH   = viewH - BLOCK_H;
+          block.style.top     = Math.round(frac * trackH) + 'px';
+          block.textContent   = Math.round(frac * 100) + '%';
+        }
+
+        makeDraggable(block, rulerEl, frac => setScroll(frac));
+
+        resize();
+        update();
+        return { resize, update };
+      }
+
+      // ── PAGE ruler ──────────────────────────────────────────────
+      const pageRulerEl = document.getElementById('page-ruler');
+      const pageCanvas  = document.getElementById('page-ruler-canvas');
+      const pageBlock   = document.getElementById('page-ruler-block');
+
+      const page = setupRuler({
+        canvas:       pageCanvas,
+        block:        pageBlock,
+        rulerEl:      pageRulerEl,
+        getScrollPx:  () => window.scrollY,
+        getScrollMax: () => document.documentElement.scrollHeight - window.innerHeight,
+        setScroll:    frac => {
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo({ top: frac * max, behavior: 'instant' });
+        },
+        side: 'right'
+      });
+
+      window.addEventListener('scroll', page.update, { passive: true });
+      window.addEventListener('resize', () => { page.resize(); page.update(); });
+
+      // ── Hide page ruler when modal is open ───────────────────────
+      const modalEl = document.getElementById('modal');
+      if (modalEl) {
+        new MutationObserver(() => {
+          const isOpen = modalEl.classList.contains('open');
+          pageRulerEl.classList.toggle('hidden', isOpen);
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      // ── MODAL ruler ─────────────────────────────────────────────
+      const modalRulerEl = document.getElementById('modal-ruler');
+      const modalCanvas  = document.getElementById('modal-ruler-canvas');
+      const modalBlock   = document.getElementById('modal-ruler-block');
+      const modalImages  = document.getElementById('modal-images');
+
+      let modalRuler = null;
+
+      function initModalRuler() {
+        if (modalRuler) return;
+        modalRuler = setupRuler({
+          canvas:       modalCanvas,
+          block:        modalBlock,
+          rulerEl:      modalRulerEl,
+          getScrollPx:  () => modalImages.scrollTop,
+          getScrollMax: () => modalImages.scrollHeight - modalImages.clientHeight,
+          setScroll:    frac => {
+            const max = modalImages.scrollHeight - modalImages.clientHeight;
+            modalImages.scrollTop = frac * max;
+          },
+          side: 'right'
+        });
+        modalImages.addEventListener('scroll', modalRuler.update, { passive: true });
+      }
+
+      // Init/redraw when modal opens
+      if (modalEl) {
+        new MutationObserver(() => {
+          if (modalEl.classList.contains('open')) {
+            setTimeout(() => {
+              initModalRuler();
+              modalRuler.resize();
+              modalRuler.update();
+            }, 80);
+          }
+        }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      window.addEventListener('resize', () => {
+        page.resize(); page.update();
+        if (modalRuler && modalEl && modalEl.classList.contains('open')) {
+          modalRuler.resize(); modalRuler.update();
+        }
+      });
+
+      // Redraw ticks on dark mode toggle (--fg color changes)
+      const darkToggle = document.getElementById('dark-toggle');
+      if (darkToggle) {
+        darkToggle.addEventListener('click', () => {
+          requestAnimationFrame(() => {
+            page.resize();
+            if (modalRuler && modalEl && modalEl.classList.contains('open')) modalRuler.resize();
+          });
+        });
+      }
+    })();
+    // ══ END RULER ═════════════════════════════════════════════════
+
+    // ══ LIGHTBOX ══════════════════════════════════════════════════
+    (function () {
+      const lb        = document.getElementById('lightbox');
+      const lbImg     = document.getElementById('lightbox-img');
+      const lbPrev    = document.getElementById('lb-prev');
+      const lbNext    = document.getElementById('lb-next');
+      const lbClose   = document.getElementById('lb-close');
+      const lbCounter = document.getElementById('lb-counter');
+      const lbHint    = document.getElementById('lb-hint');
+
+      let srcs    = [];   // all image srcs in current modal
+      let current = 0;
+      let hintShown = false;
+
+      function getModalSrcs() {
+        return Array.from(document.querySelectorAll('#modal-images .modal-img-block img'))
+                    .map(i => i.src);
+      }
+
+      window.lbOpen = function (clickedSrc) {
+        srcs    = getModalSrcs();
+        current = srcs.findIndex(s => s === clickedSrc);
+        if (current < 0) current = 0;
+        render();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        // Show hint briefly on first ever open
+        if (!hintShown) {
+          hintShown = true;
+          lbHint.style.opacity = '1';
+          setTimeout(() => lbHint.classList.add('fade'), 2400);
+        } else {
+          lbHint.style.opacity = '0';
+        }
+      };
+
+      function render() {
+        lbImg.src          = srcs[current] || '';
+        lbCounter.textContent = srcs.length > 1 ? (current + 1) + ' / ' + srcs.length : '';
+        lbPrev.classList.toggle('hidden', current === 0);
+        lbNext.classList.toggle('hidden', current === srcs.length - 1);
+      }
+
+      function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      function step(dir) {
+        const n = current + dir;
+        if (n >= 0 && n < srcs.length) { current = n; render(); }
+      }
+
+      lbClose.addEventListener('click', close);
+      lbPrev.addEventListener('click',  () => step(-1));
+      lbNext.addEventListener('click',  () => step(1));
+
+      // Click backdrop (not image/controls) to close
+      lb.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbImg) close();
+      });
+
+      // Keyboard: arrows browse within lightbox, Escape closes lightbox only
+      document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')     { e.stopImmediatePropagation(); close(); }
+        if (e.key === 'ArrowLeft')  { e.stopImmediatePropagation(); step(-1); }
+        if (e.key === 'ArrowRight') { e.stopImmediatePropagation(); step(1); }
+      }, true); // capture phase so it intercepts before modal's own keydown
+    })();
+    // ══ END LIGHTBOX ══════════════════════════════════════════════
+
+
+
+
+
   </script>
 </body>
 </html>
