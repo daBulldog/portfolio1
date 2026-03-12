@@ -30,7 +30,7 @@
       --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
-      --base-font-size: clamp(15px, 1.4vw, 19px); /* ← adjust site-wide font size here */
+      --base-font-size: clamp(16px, 2.4vw, 19px); /* ← adjust site-wide font size here */
     }
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
@@ -395,7 +395,7 @@
       opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
     }
     .hero-title {
-      font-family: var(--font-hero); font-size: clamp(4rem, 9vw, 11rem);
+      font-family: var(--font-hero); font-size: clamp(3.5rem, 8vw, 10rem);
       line-height: 0.92; letter-spacing: 0.02em;
       opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
     }
@@ -1420,7 +1420,7 @@
           ? 'display:inline-block;width:50%;vertical-align:top;aspect-ratio:16/9;background:#000;'
           : 'display:block;width:100%;aspect-ratio:16/9;background:#000;';
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${ytId}`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/` + ytId;
         iframe.title = 'Project video';
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
