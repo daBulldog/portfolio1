@@ -30,7 +30,7 @@
       --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
-      --base-font-size: clamp(17px, 1.5vw, 19px); /* ← adjust site-wide font size here */
+      --base-font-size: clamp(15px, 1.4vw, 19px); /* ← adjust site-wide font size here */
     }
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
@@ -395,7 +395,7 @@
       opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s 0.3s ease forwards;
     }
     .hero-title {
-      font-family: var(--font-hero); font-size: clamp(3.5rem, 8vw, 10rem);
+      font-family: var(--font-hero); font-size: clamp(4rem, 9vw, 11rem);
       line-height: 0.92; letter-spacing: 0.02em;
       opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s 0.5s ease forwards;
     }
@@ -682,6 +682,17 @@
       .nav-links { display: none; }
       .hero-inner { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
+    }
+    /* Portrait mobile: stack side-by-side videos vertically */
+    @media (max-width: 600px) and (orientation: portrait) {
+      .modal-img-block[style*="flex-direction:row"],
+      .modal-img-block[style*="flex-direction: row"] {
+        flex-direction: column !important;
+      }
+      .modal-img-block[style*="flex-direction:row"] > div,
+      .modal-img-block[style*="flex-direction: row"] > div {
+        width: 100% !important;
+      }
     }
     @media (hover: none) {
       #cursor { display: none; }
@@ -1506,131 +1517,101 @@
       if (!btn) return;
       let busy = false;
 
-      // Easing functions
-      function easeInOut(t) {
-        return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
-      }
-      function easeIn(t) { return t * t * t; }
+      const isTouch = () => window.matchMedia('(hover: none)').matches;
 
-      // Quadratic Bézier point
-      function bezier(t, p0, p1, p2) {
-        const mt = 1 - t;
-        return mt*mt*p0 + 2*mt*t*p1 + t*t*p2;
-      }
-
-      // Manual scroll — onFrame(progress), onDone()
-      function smoothScrollToTop(duration, onFrame, onDone) {
-        const start = window.scrollY;
-        if (start === 0) { onDone && onDone(); return; }
-        const t0 = performance.now();
-        function step(now) {
-          const p = Math.min((now - t0) / duration, 1);
-          window.scrollTo(0, start * (1 - easeInOut(p)));
-          onFrame && onFrame(p);
-          if (p < 1) requestAnimationFrame(step);
-          else onDone && onDone();
-        }
-        requestAnimationFrame(step);
-      }
+      // ── Hover (desktop only) ───────────────────────────────────
+      let puffInterval = null;
 
       function spawnPuffs() {
-        [
-          { px: '-10px', py: '12px' },
-          { px:   '0px', py: '16px' },
-          { px:  '10px', py: '12px' },
-        ].forEach(({ px, py }) => {
+        ['-10px','0px','10px'].forEach((px, i) => {
           const p = document.createElement('div');
           p.className = 'rocket-puff';
-          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${py};`;
+          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${12+i*2}px;`;
           btn.appendChild(p);
           p.addEventListener('animationend', () => p.remove(), { once: true });
         });
       }
 
-      function buildChuteHTML() {} // removed
-
-      // Hover — rumble + flame + puffs while mouse is over button
-      let puffInterval = null;
       btn.addEventListener('mouseenter', () => {
-        if (busy) return;
+        if (busy || isTouch()) return;
         btn.classList.add('hovering');
         spawnPuffs();
         puffInterval = setInterval(spawnPuffs, 500);
       });
       btn.addEventListener('mouseleave', () => {
         btn.classList.remove('hovering');
-        clearInterval(puffInterval);
-        puffInterval = null;
+        clearInterval(puffInterval); puffInterval = null;
       });
 
+      // ── Click ─────────────────────────────────────────────────
       btn.addEventListener('click', () => {
         if (busy) return;
         busy = true;
-
-        // Phase 1 — ignition shake (380ms)
         btn.classList.remove('hovering');
-        clearInterval(puffInterval);
-        puffInterval = null;
-        btn.classList.add('launching');
-        spawnPuffs();
+        clearInterval(puffInterval); puffInterval = null;
 
-        setTimeout(() => {
-          btn.classList.remove('launching');
+        if (isTouch()) {
+          // ── Mobile: simple CSS fly-up, no clone, no rAF ───────
+          btn.classList.add('launching');
+          setTimeout(() => {
+            btn.classList.remove('launching');
+            btn.classList.add('blasting');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+              btn.classList.remove('blasting');
+              busy = false;
+            }, 600);
+          }, 250);
 
-          // Snapshot start position (centre of button)
-          const r  = btn.getBoundingClientRect();
-          const vw = window.innerWidth;
-          const vh = window.innerHeight;
+        } else {
+          // ── Desktop: full Bézier arc flight ───────────────────
+          function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+          function easeIn(t)    { return t * t * t; }
+          function bezier(t, p0, p1, p2) { const m=1-t; return m*m*p0+2*m*t*p1+t*t*p2; }
 
-          const sx = r.left + r.width  / 2;
-          const sy = r.top  + r.height / 2;
+          btn.classList.add('launching');
+          spawnPuffs();
 
-          // Arc: sweep to upper-left corner and off-screen
-          // Control point pulls hard upper-right to create the diagonal curve
-          const ex  = vw / 2;       // exit at centre-top
-          const ey  = -80;           // off-screen above
-          const cpx = sx;            // directly above start → rocket launches vertically
-          const cpy = vh * -0.4;     // control point high above — tangent at t=0 is straight up
+          setTimeout(() => {
+            btn.classList.remove('launching');
+            const r  = btn.getBoundingClientRect();
+            const vw = window.innerWidth, vh = window.innerHeight;
+            const sx = r.left + r.width/2, sy = r.top + r.height/2;
 
-          // Clone — SVG + ghost label
-          const clone = document.createElement('div');
-          clone.id = 'rocket-clone';
-          const svgEl = btn.querySelector('svg').cloneNode(true);
-          const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
-          // Make flame visible on clone
-          const cloneFlame = svgEl.querySelector('#rocket-flame');
-          if (cloneFlame) { cloneFlame.style.opacity = '1'; }
-          clone.appendChild(svgEl);
-          clone.appendChild(labelEl); // label inherits opacity:0.18 from CSS
-          clone.style.cssText = `left:${sx}px; top:${sy}px; transform:translate(-50%,-50%);`;
-          document.body.appendChild(clone);
+            const clone = document.createElement('div');
+            clone.id = 'rocket-clone';
+            const svgEl   = btn.querySelector('svg').cloneNode(true);
+            const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
+            const cloneFlame = svgEl.querySelector('#rocket-flame');
+            if (cloneFlame) cloneFlame.style.opacity = '1';
+            clone.appendChild(svgEl);
+            clone.appendChild(labelEl);
+            clone.style.cssText = `left:${sx}px;top:${sy}px;transform:translate(-50%,-50%);`;
+            document.body.appendChild(clone);
+            btn.classList.add('blasting');
 
-          btn.classList.add('blasting');
+            let prevX = sx, prevY = sy + 1;
+            const start = window.scrollY;
+            const t0 = performance.now();
+            const dur = 2200;
 
-          // Seed prevX slightly off so first-frame angle is straight up (not zero)
-          let prevX = sx, prevY = sy + 1;
-
-          smoothScrollToTop(2200,
-            (progress) => {
-              const t    = easeIn(progress);
-              const nx   = bezier(t, sx, cpx, ex);
-              const ny   = bezier(t, sy, cpy, ey);
-              const dx   = nx - prevX;
-              const dy   = ny - prevY;
-              const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+            function step(now) {
+              const prog = Math.min((now - t0) / dur, 1);
+              window.scrollTo(0, start * (1 - easeInOut(prog)));
+              const t  = easeIn(prog);
+              const nx = bezier(t, sx, sx, vw/2);
+              const ny = bezier(t, sy, vh*-0.4, -80);
+              const angle = Math.atan2(ny-prevY, nx-prevX) * 180/Math.PI + 90;
               prevX = nx; prevY = ny;
               clone.style.left      = nx + 'px';
               clone.style.top       = ny + 'px';
               clone.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
-            },
-            () => {
-              clone.remove();
-              btn.classList.remove('blasting');
-              busy = false;
+              if (prog < 1) requestAnimationFrame(step);
+              else { clone.remove(); btn.classList.remove('blasting'); busy = false; }
             }
-          );
-
-        }, 380);
+            requestAnimationFrame(step);
+          }, 380);
+        }
       });
     })();
     // ── End rocket ─────────────────────────────────────────────
