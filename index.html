@@ -15,31 +15,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:           #F0e5c7;
-      --light:        #F0e5c7;
-      --fg:           #473F34;
-      --muted:        #8c9657; /*6D8196 888880;*/
+      --bg:           #f5eedb;   /*    F0e5c7*/
+      --light:        #f5eedb;
+      --fg:           #302b23; /*     473F34;  */
+      --muted:        #7d864e ; /*8c9657    6D8196 888880;*/
       --border:       #473F34;
-      --modal-bg:     #F0e5c7;
+      --modal-bg:     #f5eedb;
       --red:          #473F34;
       --mouse:        #FF802E;
+      --flame:        #E8510A;  /* rocket engine flame — change this to restyle */
       --font-display: 'Bebas Neue', sans-serif;
       --font-hero:    'Bebas Neue', sans-serif; /* ← change this to swap just the big hero/section titles */
       --font-mono:    'DM Mono', monospace;
       --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
+      --base-font-size: clamp(17px, 1.5vw, 19px); /* ← adjust site-wide font size here */
     }
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
     body.dark-mode {
-      --bg:       #473F34;
+      --bg:       #302b23;
       --light:    #F0e5c7;
       --fg:       #F0e5c7;
       --muted:    #8c9657;
       --border:   #F0e5c7;
-      --modal-bg: #473F34;
+      --modal-bg: #302b23;
       --red:      #F0e5c7;
+
+      --dim-color:        #FF802E;
+      --dim-bg:           #302b23;
+      --dim-size:         8.5px;
+      --dim-opacity:      0.75;
+      --dim-label-opacity: 0.95;  /* label pill background opacity — tune independently */
+
     }
 
 
@@ -56,8 +65,8 @@
       background: var(--bg);
       color: var(--fg);
       font-family: var(--font-body);
-      font-weight: 300;
-      font-size: clamp(13px, 1.1vw, 15px);
+      font-weight: 500;
+      font-size: var(--base-font-size);
       line-height: 1.65;
       overflow-x: hidden;
       cursor: none;
@@ -174,7 +183,7 @@
       position: fixed;
       top: 50%; transform: translateY(-50%);
       background: none; border: none;
-      color: rgba(255,255,255,0.55);
+      color: var(--muted); 
       font-family: var(--font-mono);
       font-size: 1.4rem;
       padding: 1rem 1.2rem;
@@ -193,7 +202,7 @@
       position: fixed;
       top: 16px; right: 20px;
       background: none; border: none;
-      color: rgba(255,255,255,0.55);
+      color: var(--muted);
       font-family: var(--font-mono);
       font-size: 0.65rem;
       letter-spacing: 0.15em;
@@ -284,12 +293,10 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 clamp(1.5rem, 3vw, 3rem);
       background: var(--bg);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.3s;
+      border-bottom: 1px solid var(--border);
       z-index: 200;
     }
-    nav.scrolled { border-color: var(--border); }
-    
+
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
       font-family: var(--font-mono); font-size: 0.7rem;
@@ -423,6 +430,20 @@
       color: var(--muted); transition: border-color 0.2s, color 0.2s;
     }
     .hero-about-tag:hover { border-color: var(--muted); color: var(--fg); }
+    .dim-hint {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.5;
+      margin-top: 1rem;
+    }
+    .dim-hint kbd {
+      font-family: var(--font-mono);
+      border: 1px solid var(--muted);
+      border-radius: 2px;
+      padding: 0 3px;
+      font-size: 0.55rem;
+    }
+    body.dark-mode .dim-hint { opacity: 0.4; }
     .hero-scroll {
       position: absolute; bottom: clamp(2rem,4vw,4rem); right: clamp(1.5rem,3vw,3rem);
       display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
@@ -508,6 +529,7 @@
       scrollbar-width: none;
       padding: clamp(2rem, 4vw, 4rem);
       display: flex; flex-direction: column; gap: 1.5rem;
+      
     }
     .modal-images::-webkit-scrollbar { display: none; }
     .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff; }
@@ -554,9 +576,95 @@
 
     /* ── FOOTER ────────────────────────────────────────────────── */
     footer { padding: 2rem clamp(1.5rem,3vw,3rem); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-left { display: flex; flex-direction: column; gap: 0.55rem; }
     .footer-copy { font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
-    .footer-back { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
-    .footer-back:hover { color: var(--fg); }
+    /* ── ROCKET BUTTON ─────────────────────────────────────────── */
+    #rocket-btn {
+      background: none; border: none; padding: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      position: relative;
+      cursor: none;
+    }
+    #rocket-btn .rocket-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; opacity: 1;
+    }
+    #rocket-btn:hover .rocket-label { color: var(--fg); }
+    #rocket-btn svg { overflow: visible; }
+    #rocket-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
+    #rocket-btn:not(.launching):not(.blasting):hover #rocket-inner {
+      animation: rocket-bob 1.6s ease-in-out infinite;
+    }
+    @keyframes rocket-bob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-4px); }
+    }
+    /* Hover rumble — looping pre-ignition shake + flame */
+    #rocket-btn.hovering:not(.launching):not(.blasting) #rocket-inner {
+      animation: rocket-rumble 0.25s ease-in-out infinite;
+    }
+    @keyframes rocket-rumble {
+      0%   { transform: translateX(0)    rotate(0deg);  }
+      25%  { transform: translateX(-2px) rotate(-1deg); }
+      75%  { transform: translateX(2px)  rotate(1deg);  }
+      100% { transform: translateX(0)    rotate(0deg);  }
+    }
+    #rocket-btn.hovering #rocket-flame { opacity: 1; }
+    #rocket-btn.launching #rocket-inner {
+      animation: rocket-shake 0.35s ease-in-out forwards;
+    }
+    @keyframes rocket-shake {
+      0%   { transform: translateX(0)    rotate(0deg);  }
+      20%  { transform: translateX(-3px) rotate(-2deg); }
+      40%  { transform: translateX(3px)  rotate(2deg);  }
+      60%  { transform: translateX(-2px) rotate(-1deg); }
+      80%  { transform: translateX(2px)  rotate(1deg);  }
+      100% { transform: translateX(0)    rotate(0deg);  }
+    }
+    #rocket-btn.blasting #rocket-inner {
+      /* inner hides while clone flies — just fade it out immediately */
+      animation: rocket-hide 0.15s ease forwards;
+    }
+    @keyframes rocket-hide {
+      to { opacity: 0; }
+    }
+    /* The flying clone — injected as position:fixed by JS */
+    #rocket-clone {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99998;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transform-origin: center bottom;
+      will-change: transform, top;
+      transition: none;
+    }
+    #rocket-clone svg { overflow: visible; }
+    #rocket-clone .rocket-label {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.18; /* ghost — visible but transparent while flying */
+    }
+    /* Flame fades off on descent */
+    #rocket-btn.landing #rocket-flame { opacity: 0; }
+    #rocket-flame { transition: opacity 0.1s; opacity: 0; }
+    #rocket-btn.launching #rocket-flame,
+    #rocket-btn.blasting  #rocket-flame { opacity: 1; }
+    .rocket-puff {
+      position: absolute; border-radius: 50%;
+      background: var(--flame); opacity: 0; pointer-events: none;
+      animation: puff-out 0.5s ease-out forwards;
+    }
+    @keyframes puff-out {
+      0%   { transform: scale(0.2) translate(0,0);                             opacity: 0.7; }
+      100% { transform: scale(1.8) translate(var(--px,0px), var(--py,8px));   opacity: 0;   }
+    }
+    /* ── END ROCKET ─────────────────────────────────────────────── */
 
     @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { to { opacity: 1; } }
@@ -591,11 +699,11 @@
          --dim-label-opacity label pill background opacity only (0–1)
        ══════════════════════════════════════════════════════════ */
     :root {
-      --dim-color:        #0047AB;
+      --dim-color:        #FF802E;
       --dim-bg:           #F0e5c7;
       --dim-size:         8.5px;
-      --dim-opacity:      0.85;
-      --dim-label-opacity: 0.92;  /* label pill background opacity — tune independently */
+      --dim-opacity:      0.75;
+      --dim-label-opacity: 0.95;  /* label pill background opacity — tune independently */
     }
     /* Layout highlight boxes — position set by JS (fixed for modal, absolute for page) */
     .dim-box {
@@ -604,8 +712,8 @@
       opacity: var(--dim-opacity);
       box-sizing: border-box;
     }
-    .dim-box.pad  { background: rgba(0,71,171,0.07); border: 1px dashed rgba(0,71,171,0.35); }
-    .dim-box.elem { background: transparent;          border: 1px solid  rgba(0,71,171,0.55); }
+    .dim-box.pad  { background: rgba(0,71,171,0.07); border: 1px dashed var(--dim-color); }
+    .dim-box.elem { background: transparent;          border: 1px dashed; color: var(--dim-color); }
     /* Dimension lines */
     /* dim-line replaced by inline SVG with arrowheads */
     /* Labels */
@@ -643,7 +751,7 @@
     /* CAD crosshair */
     #dim-crossH, #dim-crossV {
       display: none; position: fixed;
-      background: var(--dim-color); opacity: 0.28;
+      background: var(--dim-color); opacity: 0.1;
       pointer-events: none; z-index: 8010;
     }
     #dim-crossH { height: 1px; left: 0; width: 100vw; }
@@ -653,7 +761,7 @@
       display: none; position: fixed;
       font-family: 'DM Mono', monospace; font-size: var(--dim-size);
       letter-spacing: 0.06em; color: var(--dim-color);
-      background: var(--dim-bg); border: 1px solid var(--dim-color);
+      background: none; border: 0px solid var(--dim-color);
       padding: 2px 6px; pointer-events: none; z-index: 8020;
       white-space: nowrap; opacity: var(--dim-opacity);
     }
@@ -820,11 +928,11 @@
            data-tag="Product Design"
            data-year="2023"
            data-role="Design, Prototyping, User Testing"
-           data-desc="Collaborated to create a no-tie sneaker, enhancing accessibility for users with limited dexterity. Designed and 3D printed tightening mechanisms, and integrated them into hand-sewn shoes. Conducted user testing, gathered feedback, and iterated upon the design based on results."
+           data-desc="Designed a no-tie sneaker with a knob-based tightening mechanism to improve accessibility for users with limited hand dexterity. Developed prototypes with custom patterns and hand-sewn uppers, refining the mechanism through iterative 3D printing, testing, and user feedback."
            data-color="#C4B9AA"
            data-images="Slide5.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG,Slide9.JPG">
         <div class="thumb">
-          <img src="solemates.jpg" alt="Solemates">
+          <img src="solemates.JPG" loading="lazy" alt="Solemates">
         </div>
         <div class="item-info">
           <span class="item-name">Solemates</span>
@@ -839,11 +947,11 @@
            data-tag="Product Design"
            data-year="2023"
            data-role="Design, Prototyping"
-           data-desc="Designed and developed accessible jewelry clasps to assist users with limited hand dexterity in independently wearing necklaces and bracelets. Focused on inclusive design principles, iterating through prototypes to balance usability, aesthetics, and function."
+           data-desc="Designed accessible jewelry clasps enabling users with limited hand dexterity to independently fasten necklaces and bracelets. Iterated through prototypes to balance usability, reliability, and aesthetics while maintaining a refined, luxury-inspired design language."
            data-color="#C9BFB6"
            data-images="Slide10.JPG,Slide11.JPG,Slide12.JPG,Slide13.JPG">
         <div class="thumb">
-          <img src="jewelry.jpg" alt="Accessible Jewelry Clasps">
+          <img src="jewelry.jpg" loading="lazy" alt="Accessible Jewelry Clasps">
         </div>
         <div class="item-info">
           <span class="item-name">Accessible Jewelry Clasps</span>
@@ -854,18 +962,19 @@
 
       <!-- PROJECT 3 — Gravity-Powered Wooden Gear Clock -->
       <div class="portfolio-item reveal reveal-delay-2"
-           data-title="Gravity-Powered Wooden Gear Clock"
+           data-title="Gravity-Powered Clock"
            data-tag="Craft & Engineering"
            data-year="2023"
            data-role="Design, Fabrication"
-           data-desc="Hand-crafted a gravity-powered wooden clock with a tourbillon escapement — a mechanism originally invented to improve pocket watch accuracy by compensating for the effects of gravity. A project that merges precision engineering with fine craft and artistic expression."
+           data-desc="Developed a gravity-powered wooden wall clock featuring a tourbillon escapement and retrograding minute hand, inspired by traditional horology. Modeled components in Fusion 360 and explored gear ratios, escapements, and gravity-driven mechanisms through fabrication and testing."
            data-color="#A89F94"
-           data-images="">
+           data-images="Slide2.JPG,Slide3.JPG,Slide36.JPG,Slide37.JPG,Slide4.JPG"
+           data-videos="nVxXaC0hO8M@0">
         <div class="thumb">
-          <img src="clock.jpg" alt="Gravity-Powered Wooden Gear Clock">
+          <img src="Clock.JPG" loading="lazy" alt="Gravity-Powered Wooden Gear Clock">
         </div>
         <div class="item-info">
-          <span class="item-name">Wooden Gear Clock</span>
+          <span class="item-name">Gravity-Powered Clock</span>
           <span class="item-tag">Craft & Engineering</span>
         </div>
         <p class="item-desc">Hand-crafted gravity-powered wooden clock with tourbillon escapement.</p>
@@ -877,11 +986,11 @@
            data-tag="Art & Design"
            data-year="2023"
            data-role="Design, Fabrication"
-           data-desc="Designed and hand-crafted a series of paper lantern lamps combining traditional lantern-making techniques with contemporary form. Each lamp explores the interplay of light, shadow, and material — producing dynamic lighting effects from delicate folded paper structures."
+           data-desc="Designed a series of paper lantern lamps inspired by Isamu Noguchi and his Akari Light Sculptures. Developed lightweight frame structures and paper diffusers to explore the interplay of light, shadow, and material."
            data-color="#D6CEBC"
-           data-images="Slide30.JPG,Slide31.JPG">
+           data-images="Slide30.JPG,Slide31.JPG,Slide33.JPG">
         <div class="thumb">
-          <img src="Slide30.JPG" alt="Paper Lantern Lamps">
+          <img src="lamps.JPG" loading="lazy" alt="Paper Lantern Lamps">
         </div>
         <div class="item-info">
           <span class="item-name">Paper Lantern Lamps</span>
@@ -895,12 +1004,12 @@
            data-title="Hydro-Powered Curiosity"
            data-tag="Art & Engineering"
            data-year="2024"
-           data-role="Concept, Design, Fabrication"
-           data-desc="Conceptualized and developed a hydro-powered installation that translates water flow into sound through a design studio project. Combined art and engineering to inspire curiosity and showcase water's regenerative power. Received interest and guidance for future expansion through art registries and residencies."
+           data-role="Design, Fabrication"
+           data-desc="Designed a hydro-powered installation that converts flowing water into sound. River-driven mechanisms generate musical notes, creating an interactive system that connects art, engineering, and environmental awareness through the experience of moving water."
            data-color="#9EAAB0"
            data-images="Slide26.JPG,Slide27.JPG,Slide28.JPG,Slide29.JPG">
         <div class="thumb">
-          <img src="water.jpg" alt="Hydro-Powered Curiosity">
+          <img src="water.jpg" loading="lazy" alt="Hydro-Powered Curiosity">
         </div>
         <div class="item-info">
           <span class="item-name">Hydro-Powered Curiosity</span>
@@ -915,11 +1024,11 @@
            data-tag="Product Design"
            data-year="2023"
            data-role="Design, Fabrication"
-           data-desc="Designed and hand-sewn a pair of sneakers inspired by baseball aesthetics — incorporating classic stitching patterns, material choices, and silhouettes drawn from America's pastime. A project at the intersection of footwear design, craft, and cultural reference."
+           data-desc="Designed canvas sneakers inspired by baseball aesthetics, incorporating characteristic stitching patterns and materials. Developed custom lasts and patterns to construct the uppers and integrate cork insoles for comfort, structure, and durability."
            data-color="#BFB8AD"
            data-images="Slide14.JPG,Slide15.JPG,Slide16.JPG,Slide17.JPG">
         <div class="thumb">
-          <img src="sneakers.jpg" alt="Baseball Sneakers">
+          <img src="sneakerss.jpg" loading="lazy" alt="Baseball Sneakers">
         </div>
         <div class="item-info">
           <span class="item-name">Baseball Sneakers</span>
@@ -934,11 +1043,11 @@
            data-tag="Mechanical Engineering"
            data-year="2024"
            data-role="Team Lead, Design & Engineering"
-           data-desc="Led a team in designing an ornithopter — a flapping-wing aircraft — for crop monitoring and pest control. Engineered and tested a mechanical flapping mechanism that mimics bird flight, and communicated project challenges and solutions to stakeholders throughout the process."
+           data-desc="Led a team in designing an ornithopter, a flapping-wing aircraft inspired by bird flight, for crop monitoring and non-invasive pest deterrence. Engineered and tested a flapping mechanism while communicating development progress and challenges to stakeholders."
            data-color="#B8B5AE"
            data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG">
         <div class="thumb">
-          <img src="orno.PNG" alt="Agricultural Ornithopter"> 
+          <img src="orno.png" loading="lazy" alt="Agricultural Ornithopter"> 
         </div>
         <div class="item-info">
           <span class="item-name">Agricultural Ornithopter</span>
@@ -953,11 +1062,11 @@
            data-tag="Product Design"
            data-year="2024"
            data-role="Concept, Design, Prototyping"
-           data-desc="Developed the Scents-ory toy series — a collection of sensory toys designed to engage children through scent, texture, and play. Explored multi-sensory design principles to create products that support developmental play while being engaging, safe, and delightful."
+           data-desc="Developed the Scents-ory toy series, sensory objects designed to engage children through scent, texture, and playful interaction. Combined varied forms, materials, and embedded scented elements to stimulate multiple senses while remaining safe and visually inviting."
            data-color="#C8C2B8"
            data-images="Slide18.JPG,Slide19.JPG,Slide20.JPG,Slide21.JPG,Slide22.JPG">
         <div class="thumb">
-          <img src="Slide18.JPG" alt="Scents-ory Toy Series">
+          <img src="toy.JPG" loading="lazy" alt="Scents-ory Toy Series">
         </div>
         <div class="item-info">
           <span class="item-name">Scents-ory Toy Series</span>
@@ -972,12 +1081,11 @@
            data-tag="Digital Design"
            data-year="2022–Present"
            data-role="3D Modeling, Visualization"
-           data-desc="A collection of 3D renderings and visualizations produced across various projects and explorations. Showcasing proficiency in CAD, surfacing, and photorealistic rendering — from product concepts to architectural and mechanical forms."
+           data-desc="A collection of 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, surface development, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
            data-color="#BDB7AF"
-           data-images="">
+           data-images="Slide34.JPG,Slide35.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#BDB7AF;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="renderings.jpg" alt="Renderings"> -->
+          <img src="render.JPG" alt="Renderings">
         </div>
         <div class="item-info">
           <span class="item-name">Renderings</span>
@@ -992,12 +1100,11 @@
            data-tag="Craft & Engineering"
            data-year="2023"
            data-role="Design, Fabrication"
-           data-desc="Designed and built a series of automata — mechanical sculptures that produce animated, lifelike movement through carefully engineered cam and linkage systems. Each piece explores the poetry of motion, translating mechanical precision into expressive, whimsical form."
+           data-desc="Designed and built a series of automata - mechanical sculptures that produce lifelike movement through cam-driven mechanisms and linkage systems. Explores how simple mechanical systems translate rotational input into expressive kinetic motion."
            data-color="#AFA99F"
-           data-images="">
+           data-images="Slide38.JPG">
         <div class="thumb">
-          <div class="thumb-placeholder" style="background:#AFA99F;width:100%;height:100%;"></div>
-          <!-- Replace with: <img src="automata.jpg" alt="Automata"> -->
+          <img src="Slide38.JPG" alt="Automata"> -->
         </div>
         <div class="item-info">
           <span class="item-name">Automata</span>
@@ -1091,11 +1198,42 @@
   </section>
 
   <footer>
-    <span class="footer-copy">© 2025 Gaetano Hamilton. All rights reserved.</span>
-    <a href="#hero" class="footer-back">Back to top ↑</a>
+    <div class="footer-left">
+      <span class="footer-copy">© 2025 Gaetano Hamilton. All rights reserved.</span>
+      <p class="dim-hint">[ press <kbd>D</kbd> to inspect ]</p>
+    </div>
+    <a href="#hero" class="footer-back" style="display:none"></a>
+    <button id="rocket-btn" aria-label="Back to top">
+      <div id="rocket-inner">
+        <!-- Rocket SVG — drawn in site line style -->
+        <svg width="28" height="48" viewBox="0 0 28 48" fill="none"
+             stroke="var(--muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Body -->
+          <path d="M14 4 C14 4 22 12 22 26 L14 30 L6 26 C6 12 14 4 14 4Z" stroke="var(--fg)" fill="none"/>
+          <!-- Nose tip -->
+          <line x1="14" y1="4" x2="14" y2="1"/>
+          <!-- Window -->
+          <circle cx="14" cy="18" r="3" stroke="var(--muted)" fill="none"/>
+          <!-- Fins left -->
+          <path d="M6 26 L2 34 L6 32"/>
+          <!-- Fins right -->
+          <path d="M22 26 L26 34 L22 32"/>
+          <!-- Exhaust nozzle -->
+          <path d="M10 30 L10 34 L14 32 L18 34 L18 30"/>
+          <!-- Flame — separate group toggled by class -->
+          <g id="rocket-flame">
+            <path d="M12 34 Q14 42 12 46 Q14 40 16 46 Q14 42 16 34"
+                  stroke="none" fill="var(--flame)" opacity="0.9"/>
+            <path d="M13 34 Q14 39 13 43"
+                  stroke="var(--flame)" stroke-width="1" fill="none" opacity="0.45"/>
+          </g>
+        </svg>
+        <span class="rocket-label">To top</span>
+      </div>
+    </button>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // ── Custom cursor with dark/light auto-switching ───────────
     const cursor = document.getElementById('cursor');
 
@@ -1113,7 +1251,7 @@
     function addHover()  { cursor.classList.add('hover'); }
     function remHover()  { cursor.classList.remove('hover'); }
     function bindHover() {
-      document.querySelectorAll('a, button, input, textarea, .portfolio-item, .modal-img-block img').forEach(el => {
+      document.querySelectorAll('a, button, input, textarea, .portfolio-item, .modal-img-block img, #rocket-btn').forEach(el => {
         el.removeEventListener('mouseenter', addHover);
         el.removeEventListener('mouseleave', remHover);
         el.addEventListener('mouseenter', addHover);
@@ -1150,9 +1288,6 @@
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          // Nav border
-          nav.classList.toggle('scrolled', window.scrollY > 20);
-
           // Active nav section
           const mid = window.innerHeight * 0.4;
           let current = 'hero';
@@ -1242,10 +1377,74 @@
       elImages.innerHTML = '';
       const base   = d.color || '#C9C3BA';
       const extras = (d.images && d.images.trim()) ? d.images.split(',').map(s=>s.trim()).filter(Boolean) : [];
+
+      // data-videos format: "ID@after,ID@after" — @after is optional (appends at end if omitted)
+      // e.g. "abc123@1,def456@1" puts two videos side-by-side after image index 1
+      // size: "half" = 50% width (side by side), "full" = 100% (default)
+      // e.g. "abc123@1:half,def456@1:half"
+      const videoEntries = (d.videos || (d.video ? d.video + (d.videoAfter != null && d.videoAfter !== '' ? '@' + d.videoAfter : '') : ''))
+        .split(',').map(s => s.trim()).filter(Boolean).map(entry => {
+          const [idPart, sizePart] = entry.split(':');
+          const [ytId, afterStr]   = idPart.split('@');
+          return { ytId: ytId.trim(), after: afterStr != null ? parseInt(afterStr) : null, size: sizePart || 'full' };
+        });
+
+      function buildVideoBlock(ytId, size) {
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = size === 'half'
+          ? 'display:inline-block;width:50%;vertical-align:top;aspect-ratio:16/9;background:#000;'
+          : 'display:block;width:100%;aspect-ratio:16/9;background:#000;';
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${ytId}`;
+        iframe.title = 'Project video';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.style.cssText = 'width:100%;height:100%;display:block;';
+        wrapper.appendChild(iframe);
+        return wrapper;
+      }
+
+      function insertVideosAfter(afterIdx) {
+        const group = videoEntries.filter(v => v.after === afterIdx);
+        if (!group.length) return;
+        // If any are 'half', wrap them in a flex row
+        const hasHalf = group.some(v => v.size === 'half');
+        const container = document.createElement('div');
+        container.className = 'modal-img-block extra';
+        container.style.cssText = hasHalf
+          ? 'display:flex;flex-direction:row;gap:0;width:100%;aspect-ratio:unset;'
+          : 'display:block;width:100%;aspect-ratio:unset;';
+        group.forEach(v => container.appendChild(buildVideoBlock(v.ytId, v.size)));
+        elImages.appendChild(container);
+      }
+
       if (extras.length) {
-        extras.forEach((src, i) => elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+1}`)));
+        extras.forEach((src, i) => {
+          elImages.appendChild(buildBlock('extra', base, src, `${d.title} ${i+1}`));
+          insertVideosAfter(i);
+        });
+        // Videos with no @after or after >= length go at the end
+        const endGroup = videoEntries.filter(v => v.after === null || v.after >= extras.length);
+        if (endGroup.length) {
+          const hasHalf = endGroup.some(v => v.size === 'half');
+          const container = document.createElement('div');
+          container.className = 'modal-img-block extra';
+          container.style.cssText = hasHalf
+            ? 'display:flex;flex-direction:row;gap:0;width:100%;aspect-ratio:unset;'
+            : 'display:block;width:100%;aspect-ratio:unset;';
+          endGroup.forEach(v => container.appendChild(buildVideoBlock(v.ytId, v.size)));
+          elImages.appendChild(container);
+        }
       } else {
         [0,-18,18].forEach(s => elImages.appendChild(buildBlock('extra', shiftHex(base,s), null, '')));
+        videoEntries.forEach(v => {
+          const container = document.createElement('div');
+          container.className = 'modal-img-block extra';
+          container.style.cssText = 'display:block;width:100%;aspect-ratio:16/9;background:#000;';
+          container.appendChild(buildVideoBlock(v.ytId, v.size));
+          elImages.appendChild(container);
+        });
       }
       prevBtn.style.visibility = idx > 0                  ? 'visible' : 'hidden';
       nextBtn.style.visibility = idx < allItems.length-1  ? 'visible' : 'hidden';
@@ -1254,7 +1453,6 @@
       elImages.scrollTop = 0;
       bindHover();
     }
-
     function closeModal() {
       modal.classList.remove('open');
       document.body.classList.remove('modal-open');
@@ -1287,6 +1485,141 @@
     darkToggle.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
     });
+
+    // ── Rocket back-to-top ─────────────────────────────────────
+    (function () {
+      const btn = document.getElementById('rocket-btn');
+      if (!btn) return;
+      let busy = false;
+
+      // Easing functions
+      function easeInOut(t) {
+        return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+      }
+      function easeIn(t) { return t * t * t; }
+
+      // Quadratic Bézier point
+      function bezier(t, p0, p1, p2) {
+        const mt = 1 - t;
+        return mt*mt*p0 + 2*mt*t*p1 + t*t*p2;
+      }
+
+      // Manual scroll — onFrame(progress), onDone()
+      function smoothScrollToTop(duration, onFrame, onDone) {
+        const start = window.scrollY;
+        if (start === 0) { onDone && onDone(); return; }
+        const t0 = performance.now();
+        function step(now) {
+          const p = Math.min((now - t0) / duration, 1);
+          window.scrollTo(0, start * (1 - easeInOut(p)));
+          onFrame && onFrame(p);
+          if (p < 1) requestAnimationFrame(step);
+          else onDone && onDone();
+        }
+        requestAnimationFrame(step);
+      }
+
+      function spawnPuffs() {
+        [
+          { px: '-10px', py: '12px' },
+          { px:   '0px', py: '16px' },
+          { px:  '10px', py: '12px' },
+        ].forEach(({ px, py }) => {
+          const p = document.createElement('div');
+          p.className = 'rocket-puff';
+          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${py};`;
+          btn.appendChild(p);
+          p.addEventListener('animationend', () => p.remove(), { once: true });
+        });
+      }
+
+      function buildChuteHTML() {} // removed
+
+      // Hover — rumble + flame + puffs while mouse is over button
+      let puffInterval = null;
+      btn.addEventListener('mouseenter', () => {
+        if (busy) return;
+        btn.classList.add('hovering');
+        spawnPuffs();
+        puffInterval = setInterval(spawnPuffs, 500);
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.classList.remove('hovering');
+        clearInterval(puffInterval);
+        puffInterval = null;
+      });
+
+      btn.addEventListener('click', () => {
+        if (busy) return;
+        busy = true;
+
+        // Phase 1 — ignition shake (380ms)
+        btn.classList.remove('hovering');
+        clearInterval(puffInterval);
+        puffInterval = null;
+        btn.classList.add('launching');
+        spawnPuffs();
+
+        setTimeout(() => {
+          btn.classList.remove('launching');
+
+          // Snapshot start position (centre of button)
+          const r  = btn.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+
+          const sx = r.left + r.width  / 2;
+          const sy = r.top  + r.height / 2;
+
+          // Arc: sweep to upper-left corner and off-screen
+          // Control point pulls hard upper-right to create the diagonal curve
+          const ex  = vw / 2;       // exit at centre-top
+          const ey  = -80;           // off-screen above
+          const cpx = sx;            // directly above start → rocket launches vertically
+          const cpy = vh * -0.4;     // control point high above — tangent at t=0 is straight up
+
+          // Clone — SVG + ghost label
+          const clone = document.createElement('div');
+          clone.id = 'rocket-clone';
+          const svgEl = btn.querySelector('svg').cloneNode(true);
+          const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
+          // Make flame visible on clone
+          const cloneFlame = svgEl.querySelector('#rocket-flame');
+          if (cloneFlame) { cloneFlame.style.opacity = '1'; }
+          clone.appendChild(svgEl);
+          clone.appendChild(labelEl); // label inherits opacity:0.18 from CSS
+          clone.style.cssText = `left:${sx}px; top:${sy}px; transform:translate(-50%,-50%);`;
+          document.body.appendChild(clone);
+
+          btn.classList.add('blasting');
+
+          // Seed prevX slightly off so first-frame angle is straight up (not zero)
+          let prevX = sx, prevY = sy + 1;
+
+          smoothScrollToTop(2200,
+            (progress) => {
+              const t    = easeIn(progress);
+              const nx   = bezier(t, sx, cpx, ex);
+              const ny   = bezier(t, sy, cpy, ey);
+              const dx   = nx - prevX;
+              const dy   = ny - prevY;
+              const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+              prevX = nx; prevY = ny;
+              clone.style.left      = nx + 'px';
+              clone.style.top       = ny + 'px';
+              clone.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+            },
+            () => {
+              clone.remove();
+              btn.classList.remove('blasting');
+              busy = false;
+            }
+          );
+
+        }, 380);
+      });
+    })();
+    // ── End rocket ─────────────────────────────────────────────
 
 
     // ══ DIMENSION MODE — press D to toggle ═══════════════════════
@@ -1323,8 +1656,7 @@
         // actually overlap it. Elements fully above viewport have negative r.bottom
         // but are still real elements; don't skip them.
         if (r.width < 2 || r.bottom <= r.top) return;
-        const clampedTop = (minY != null && r.bottom > minY) ? Math.max(minY, r.top) : r.top;
-        if (r.bottom <= clampedTop) return;
+        if (r.width > window.innerWidth * 0.85) return; // skip full-width spanning boxes
 
         const el = document.createElement('div');
         el.className = 'dim-box ' + cls;
@@ -1333,9 +1665,9 @@
           pointerEvents: 'none',
           boxSizing:     'border-box',
           left:          r.left + 'px',
-          top:           (clampedTop + sy) + 'px',
+          top:           (r.top + sy) + 'px',
           width:         r.width + 'px',
-          height:        (r.bottom - clampedTop) + 'px',
+          height:        r.height + 'px',
           zIndex:        7990,
           opacity:       'var(--dim-opacity)'
         });
@@ -1352,7 +1684,9 @@
         }, useFixed });
       }
 
-      // ── SVG arrowhead marker — injected once ─────────────────────
+      // ── Create a box inside a scrolling container ────────────────
+      // Used for modal image blocks so they scroll naturally with the images panel.
+      // Coords are relative to the container's top-left + scrollTop.
       let _svgDefs = null;
       function ensureDefs() {
         if (_svgDefs) return;
@@ -1583,7 +1917,6 @@
         // CONTACT
         const contact = document.getElementById('contact');
         if (contact) {
-          pageBox(contact, 'pad');
           pageBox(contact.querySelector('.section-title'),  'elem');
           pageBox(contact.querySelector('.section-number'), 'elem');
           ['.contact-heading', '.contact-note', '.contact-links'].forEach(sel => {
@@ -1599,8 +1932,7 @@
         // FOOTER
         const footer = document.querySelector('footer');
         if (footer) {
-          pageBox(footer, 'pad');
-          footer.querySelectorAll('span, a').forEach(el => pageBox(el, 'elem'));
+          footer.querySelectorAll('span, a, button').forEach(el => pageBox(el, 'elem'));
         }
       }
 
@@ -1632,8 +1964,7 @@
           addBox(images.getBoundingClientRect(), 'pad', mY);
           images.querySelectorAll('.modal-img-block').forEach(blk => {
             const r = blk.getBoundingClientRect();
-            // include if any part is in the visible viewport
-            if (r.bottom >= mY && r.top <= vH && r.height > 2) addBox(r, 'elem', mY);
+            if (r.height > 2) addBox(r, 'elem', mY);
           });
         }
       }
@@ -1698,10 +2029,26 @@
 
       const modalImages = document.getElementById('modal-images');
       if (modalImages) {
-        modalImages.addEventListener('scroll', () => { if (active && mode === 'modal') buildBoxesDebounced(); }, { passive: true });
+        let _mTick = false;
+        modalImages.addEventListener('scroll', () => {
+          if (!active || mode !== 'modal') return;
+          if (_mTick) return;
+          _mTick = true;
+          requestAnimationFrame(() => { buildBoxes(); _mTick = false; });
+        }, { passive: true });
       }
-
       window.addEventListener('resize', () => { if (active) buildBoxesDebounced(); });
+
+      // Rebuild after scroll settles so boxes stay accurate if D was pressed
+      // while the page was already scrolled.
+      let _scrollRebuildTimer = null;
+      window.addEventListener('scroll', () => {
+        if (!active || mode === 'modal') return;
+        clearTimeout(_scrollRebuildTimer);
+        _scrollRebuildTimer = setTimeout(() => {
+          if (active && mode !== 'modal') buildBoxes();
+        }, 150);
+      }, { passive: true });
       document.addEventListener('keydown', e => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.key === 'd' || e.key === 'D') toggle();
