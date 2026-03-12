@@ -930,7 +930,9 @@
            data-role="Design, Prototyping, User Testing"
            data-desc="Designed a no-tie sneaker with a knob-based tightening mechanism to improve accessibility for users with limited hand dexterity. Developed prototypes with custom patterns and hand-sewn uppers, refining the mechanism through iterative 3D printing, testing, and user feedback."
            data-color="#C4B9AA"
-           data-images="Slide5.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG,Slide9.JPG">
+           data-images="Slide9.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG"
+           data-videos="1Aw6RdrB51I@3:half,Vf7ZFknSdhM@3:half">
+
         <div class="thumb">
           <img src="solemates.JPG" loading="lazy" alt="Solemates">
         </div>
@@ -968,8 +970,8 @@
            data-role="Design, Fabrication"
            data-desc="Developed a gravity-powered wooden wall clock featuring a tourbillon escapement and retrograding minute hand, inspired by traditional horology. Modeled components in Fusion 360 and explored gear ratios, escapements, and gravity-driven mechanisms through fabrication and testing."
            data-color="#A89F94"
-           data-images="Slide2.JPG,Slide3.JPG,Slide36.JPG,Slide37.JPG,Slide4.JPG"
-           data-videos="nVxXaC0hO8M@0">
+           data-images="Slide2.JPG,Slide3.JPG,Slide37.JPG,Slide4.JPG"
+           data-videos="nVxXaC0hO8M@0,5r2BgG2kgFU?si@1,cII2KJ8cpvE@2:half,elsnzwEgUEk@2:half">
         <div class="thumb">
           <img src="clock.JPG" loading="lazy" alt="Gravity-Powered Wooden Gear Clock">
         </div>
@@ -988,7 +990,9 @@
            data-role="Design, Fabrication"
            data-desc="Designed a series of paper lantern lamps inspired by Isamu Noguchi and his Akari Light Sculptures. Developed lightweight frame structures and paper diffusers to explore the interplay of light, shadow, and material."
            data-color="#D6CEBC"
-           data-images="Slide30.JPG,Slide31.JPG,Slide33.JPG">
+           data-images="Slide30.JPG,Slide31.JPG,Slide33.JPG"  
+           data-videos="21s310VJoxE@1">
+
         <div class="thumb">
           <img src="lamps.jpg" loading="lazy" alt="Paper Lantern Lamps">
         </div>
@@ -1007,7 +1011,9 @@
            data-role="Design, Fabrication"
            data-desc="Designed a hydro-powered installation that converts flowing water into sound. River-driven mechanisms generate musical notes, creating an interactive system that connects art, engineering, and environmental awareness through the experience of moving water."
            data-color="#9EAAB0"
-           data-images="Slide26.JPG,Slide27.JPG,Slide28.JPG,Slide29.JPG">
+           data-images="Slide26.JPG,Slide27.JPG,Slide29.JPG"
+           data-videos="urjJJJED_74@1">
+
         <div class="thumb">
           <img src="water.jpg" loading="lazy" alt="Hydro-Powered Curiosity">
         </div>
@@ -1045,7 +1051,9 @@
            data-role="Team Lead, Design & Engineering"
            data-desc="Led a team in designing an ornithopter, a flapping-wing aircraft inspired by bird flight, for crop monitoring and non-invasive pest deterrence. Engineered and tested a flapping mechanism while communicating development progress and challenges to stakeholders."
            data-color="#B8B5AE"
-           data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG">
+           data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG" 5AeuCir9iOQ
+           data-videos="5AeuCir9iOQ@1:half,8WQYo7K3Gus@1:half">
+
         <div class="thumb">
           <img src="orno.png" loading="lazy" alt="Agricultural Ornithopter"> 
         </div>
@@ -1102,9 +1110,11 @@
            data-role="Design, Fabrication"
            data-desc="Designed and built a series of automata - mechanical sculptures that produce lifelike movement through cam-driven mechanisms and linkage systems. Explores how simple mechanical systems translate rotational input into expressive kinetic motion."
            data-color="#AFA99F"
-           data-images="Slide38.jpg">
+           data-images="Slide38.jpg" 
+           data-videos="Ois5vKYg2bI@0">
+
         <div class="thumb">
-          <img src="Slide38.jpg" alt="Automata"> -->
+          <img src="automata.jpg" alt="Automata"> -->
         </div>
         <div class="item-info">
           <span class="item-name">Automata</span>
@@ -1113,7 +1123,9 @@
         <p class="item-desc">Mechanical sculptures animating motion through cams and linkages.</p>
       </div>
 
-      <!-- PROJECT 11 — Work in Progress -->
+<!--
+
+      <!-- PROJECT 11 — Work in Progress 
       <div class="portfolio-item reveal reveal-delay-2"
            data-title="Work in Progress"
            data-tag="Coming Soon"
@@ -1132,7 +1144,7 @@
         <p class="item-desc">Project in development — coming soon.</p>
       </div>
 
-      <!-- PROJECT 12 — Work in Progress -->
+      <!-- PROJECT 12 — Work in Progress 
       <div class="portfolio-item reveal reveal-delay-3"
            data-title="Work in Progress"
            data-tag="Coming Soon"
@@ -1150,6 +1162,8 @@
         </div>
         <p class="item-desc">Project in development — coming soon.</p>
       </div>
+
+-->
 
     </div>
   </section>
@@ -1413,7 +1427,7 @@
         const container = document.createElement('div');
         container.className = 'modal-img-block extra';
         container.style.cssText = hasHalf
-          ? 'display:flex;flex-direction:row;gap:0;width:100%;aspect-ratio:unset;'
+          ? 'display:flex;flex-direction:row;gap:0.5rem;width:100%;aspect-ratio:unset;'
           : 'display:block;width:100%;aspect-ratio:unset;';
         group.forEach(v => container.appendChild(buildVideoBlock(v.ytId, v.size)));
         elImages.appendChild(container);
