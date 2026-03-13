@@ -30,7 +30,7 @@
       --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
-      --base-font-size: clamp(16px, 2.4vw, 19px); /* ← adjust site-wide font size here */
+      --base-font-size: clamp(17px, 1.5vw, 19px); /* ← adjust site-wide font size here */
     }
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
@@ -545,7 +545,7 @@
     .modal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
     .modal-desc { font-size: 0.88rem; line-height: 1.9; color: var(--fg); }
     .modal-meta { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    .modal-meta-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .modal-meta-row { display: flex; justify-content: space-between; align-items: baseline; text-align: right;}
     .modal-meta-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
     .modal-meta-value { font-family: var(--font-mono); font-size: 0.68rem; }
     .modal-nav-row { margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
@@ -683,17 +683,6 @@
       .hero-inner { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
     }
-    /* Portrait mobile: stack side-by-side videos vertically */
-    @media (max-width: 600px) and (orientation: portrait) {
-      .modal-img-block[style*="flex-direction:row"],
-      .modal-img-block[style*="flex-direction: row"] {
-        flex-direction: column !important;
-      }
-      .modal-img-block[style*="flex-direction:row"] > div,
-      .modal-img-block[style*="flex-direction: row"] > div {
-        width: 100% !important;
-      }
-    }
     @media (hover: none) {
       #cursor { display: none; }
       body { cursor: auto; }
@@ -806,6 +795,9 @@
   <button id="lb-close">✕ close</button>
   <button class="lb-arrow" id="lb-prev">&#8592;</button>
   <img id="lightbox-img" src="" alt="">
+  <iframe id="lightbox-video" src="" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen style="display:none;width:min(90vw,960px);height:min(80vh,540px);border:1px solid rgba(255,255,255,0.08);"></iframe>
   <button class="lb-arrow" id="lb-next">&#8594;</button>
   <div id="lb-counter"></div>
   <div id="lb-hint">← → to browse &nbsp;·&nbsp; esc to close</div>
@@ -829,7 +821,7 @@
       </div>
       <div class="modal-info">
         <div>
-          <p class="modal-tag"            id="modal-tag"></p>
+           
           <h2 class="modal-project-title" id="modal-title"></h2>
         </div>
         <p class="modal-desc" id="modal-desc"></p>
@@ -880,22 +872,25 @@
             Rensselaer Polytechnic Institute — Graduating May 2026.
           </p>
    
+          </p>
+<br>
+          <div class="hero-about-links">
+            <a href="GaetanoHamiltonResume.pdf" target="_blank" rel="noopener noreferrer" class="hero-about-link">Resume</a>
+            <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="hero-about-link">LinkedIn</a>
+            <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="hero-about-link">Instructables</a>
+          </div>
+
+
         </div>
 
         <!-- RIGHT: bio, links, tags, stats -->
         <!-- ── Edit your bio, links, tags and stats here ── -->
         <div class="hero-right">
           <p class="hero-sub">
-            I'm a dual major student at RPI, studying Mechanical Engineering and
-            Design, Innovation, &amp; Society. I thrive in collaborative environments,
-            bringing curiosity and innovation to every project — from flapping-wing
-            aircraft to hydro-powered sound installations.
-          </p>
-          <div class="hero-about-links">
-            <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="hero-about-link">LinkedIn</a>
-            <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="hero-about-link">Instructables</a>
-            <a href="https://files.cargocollective.com/c2030723/Gaetano_Hamilton_Resume.pdf" target="_blank" rel="noopener noreferrer" class="hero-about-link">Download Resume</a>
-          </div>
+            I’m a senior at Rensselaer Polytechnic Institute, majoring Mechanical Engineering & Design, Innovation, and Society, with a deep interest in merging engineering and design. I’ve led projects from designing an ornithopter for crop monitoring to developing a hydro-powered sound installation, combining technical skills with creative problem-solving.
+<br> <br>
+Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contribute to Instructables and have taught 500,000+ viewers through 3D modeling tutorials on YouTube. I thrive in collaborative environments, bringing curiosity and innovation to every project.
+
           <div class="hero-about-tags">
             <span class="hero-about-tag">Mechanical Engineering</span>
             <span class="hero-about-tag">Product Design</span>
@@ -936,8 +931,8 @@
       <!-- PROJECT 1 — Solemates (No-Tie Sneakers) -->
       <div class="portfolio-item reveal"
            data-title="Solemates"
-           data-tag="Product Design"
-           data-year="2023"
+           data-tag="Human Factors · Fusion 360 · 3D printing · Pattern Making · Sewing · Collaboration · User Testing · Teamwork"
+           data-year="Fall 2023"
            data-role="Design, Prototyping, User Testing"
            data-desc="Designed a no-tie sneaker with a knob-based tightening mechanism to improve accessibility for users with limited hand dexterity. Developed prototypes with custom patterns and hand-sewn uppers, refining the mechanism through iterative 3D printing, testing, and user feedback."
            data-color="#C4B9AA"
@@ -957,8 +952,8 @@
       <!-- PROJECT 2 — Accessible Jewelry Clasps -->
       <div class="portfolio-item reveal reveal-delay-1"
            data-title="Accessible Jewelry Clasps"
-           data-tag="Product Design"
-           data-year="2023"
+           data-tag="Sketching · 3D Printing · User Testing · Rendering · Unreal Engine · Blender · Fusion 360"
+           data-year="Spring 2023"
            data-role="Design, Prototyping"
            data-desc="Designed accessible jewelry clasps enabling users with limited hand dexterity to independently fasten necklaces and bracelets. Iterated through prototypes to balance usability, reliability, and aesthetics while maintaining a refined, luxury-inspired design language."
            data-color="#C9BFB6"
@@ -976,10 +971,10 @@
       <!-- PROJECT 3 — Gravity-Powered Wooden Gear Clock -->
       <div class="portfolio-item reveal reveal-delay-2"
            data-title="Gravity-Powered Clock"
-           data-tag="Craft & Engineering"
-           data-year="2023"
+           data-tag="2D Drafting · CAD · Woodworking · Prototyping · Mechanical Design · Horology · Research"
+           data-year="2022"
            data-role="Design, Fabrication"
-           data-desc="Developed a gravity-powered wooden wall clock featuring a tourbillon escapement and retrograding minute hand, inspired by traditional horology. Modeled components in Fusion 360 and explored gear ratios, escapements, and gravity-driven mechanisms through fabrication and testing."
+           data-desc="Developed a 27&quot; gravity-powered wooden clock featuring a tourbillon escapement and retrograding minute hand. Modeled mechanisms in Fusion 360 and fabricated the gear train by hand, applying horology research on escapements, gear ratios, and gravity-driven regulation."
            data-color="#A89F94"
            data-images="Slide2.JPG,Slide3.JPG,Slide37.JPG,Slide4.JPG"
            data-videos="nVxXaC0hO8M@0,5r2BgG2kgFU?si@1,cII2KJ8cpvE@2:half,elsnzwEgUEk@2:half">
@@ -996,8 +991,8 @@
       <!-- PROJECT 4 — Paper Lantern Lamps -->
       <div class="portfolio-item reveal reveal-delay-3"
            data-title="Paper Lantern Lamps"
-           data-tag="Art & Design"
-           data-year="2023"
+           data-tag="Concept Sketching · Material Research · Fabrication · Electrical · Blender 3D"
+           data-year="Winter 2025"
            data-role="Design, Fabrication"
            data-desc="Designed a series of paper lantern lamps inspired by Isamu Noguchi and his Akari Light Sculptures. Developed lightweight frame structures and paper diffusers to explore the interplay of light, shadow, and material."
            data-color="#D6CEBC"
@@ -1017,8 +1012,8 @@
       <!-- PROJECT 5 — Hydro-Powered Curiosity -->
       <div class="portfolio-item reveal"
            data-title="Hydro-Powered Curiosity"
-           data-tag="Art & Engineering"
-           data-year="2024"
+           data-tag="Rapid Prototyping · Fluid Dynamics · Location Research · Creativity"
+           data-year="Summer 2024"
            data-role="Design, Fabrication"
            data-desc="Designed a hydro-powered installation that converts flowing water into sound. River-driven mechanisms generate musical notes, creating an interactive system that connects art, engineering, and environmental awareness through the experience of moving water."
            data-color="#9EAAB0"
@@ -1038,8 +1033,8 @@
       <!-- PROJECT 6 — Baseball Sneakers -->
       <div class="portfolio-item reveal reveal-delay-1"
            data-title="Baseball Sneakers"
-           data-tag="Product Design"
-           data-year="2023"
+           data-tag="Conceptual Blending · Design Translation · Pattern Making · Manufacturing Research · Sewing"
+           data-year="Summer 2023"
            data-role="Design, Fabrication"
            data-desc="Designed canvas sneakers inspired by baseball aesthetics, incorporating characteristic stitching patterns and materials. Developed custom lasts and patterns to construct the uppers and integrate cork insoles for comfort, structure, and durability."
            data-color="#BFB8AD"
@@ -1057,8 +1052,8 @@
       <!-- PROJECT 7 — Agricultural Ornithopter -->
       <div class="portfolio-item reveal reveal-delay-2"
            data-title="Agricultural Ornithopter"
-           data-tag="Mechanical Engineering"
-           data-year="2024"
+           data-tag="Leadership · Mechanical Design · Seimens NX · Fusion 360 · Electronics · System Integration · Component Selection"
+           data-year="Summer 2024"
            data-role="Team Lead, Design & Engineering"
            data-desc="Led a team in designing an ornithopter, a flapping-wing aircraft inspired by bird flight, for crop monitoring and non-invasive pest deterrence. Engineered and tested a flapping mechanism while communicating development progress and challenges to stakeholders."
            data-color="#B8B5AE"
@@ -1078,8 +1073,8 @@
       <!-- PROJECT 8 — Scents-ory Toy Series -->
       <div class="portfolio-item reveal reveal-delay-3"
            data-title="Scents-ory Toy Series"
-           data-tag="Product Design"
-           data-year="2024"
+           data-tag="Rhino 3D · User Research · Organization · Collaboration · Rapid Prototyping · Market Analysis"
+           data-year="Spring 2023"
            data-role="Concept, Design, Prototyping"
            data-desc="Developed the Scents-ory toy series, sensory objects designed to engage children through scent, texture, and playful interaction. Combined varied forms, materials, and embedded scented elements to stimulate multiple senses while remaining safe and visually inviting."
            data-color="#C8C2B8"
@@ -1097,7 +1092,7 @@
       <!-- PROJECT 9 — Renderings -->
       <div class="portfolio-item reveal"
            data-title="Renderings"
-           data-tag="Digital Design"
+           data-tag="Product Visualization using: Rhino 3D · Seimens NX · SolidWorks · Fusion 360 · Blender 3D"
            data-year="2022–Present"
            data-role="3D Modeling, Visualization"
            data-desc="A collection of 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, surface development, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
@@ -1116,8 +1111,8 @@
       <!-- PROJECT 10 — Automata -->
       <div class="portfolio-item reveal reveal-delay-1"
            data-title="Automata"
-           data-tag="Craft & Engineering"
-           data-year="2023"
+           data-tag="Creativity · Mechanical Design · Experimentation · Visual Storytelling · Art"
+           data-year="2019–Present"
            data-role="Design, Fabrication"
            data-desc="Designed and built a series of automata - mechanical sculptures that produce lifelike movement through cam-driven mechanisms and linkage systems. Explores how simple mechanical systems translate rotational input into expressive kinetic motion."
            data-color="#AFA99F"
@@ -1187,32 +1182,33 @@
     </div>
     <div class="contact-inner">
       <div>
-        <h3 class="contact-heading reveal">Let's<br>work<br>together.</h3>
-        <p class="contact-note reveal reveal-delay-1">
+        <img src="gaetano.jpg" alt="Let's work together" class="contact-heading reveal" style="width:400px; height:400px; object-fit:cover;">
+        <p class="contact-note reveal reveal-delay-1" style="margin-bottom:0;">
           Open to internships, collaborations, and creative engineering projects.
-          Currently based in Troy, NY — available for opportunities nationwide.
-        </p>
-        <div class="contact-links reveal reveal-delay-2">
+          Currently based in Troy, NY. Available for opportunities worldwide.<br><br></p>
+        <div class="contact-links" style="margin-top:0;">
           <!-- CHANGE THIS: replace with your real email -->
-          <a href="/cdn-cgi/l/email-protection#fe87918b8cbe9b939f9792d09d9193" class="contact-link"><span class="__cf_email__" data-cfemail="b3cadcc6c1f3d6ded2dadf9dd0dcde">[email&#160;protected]</span></a>
+          <a href="GaetanoHamiltonResume.pdf" class="contact-link">Resume</a>
           <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="contact-link">LinkedIn</a>
           <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="contact-link">Instructables</a>
+          <a href="mailto:gaetanoham@outlook.com" class="contact-link">gaetanoham@outlook.com</a>
+
         </div>
       </div>
       <div class="contact-form reveal reveal-delay-1">
         <!-- Sign up at formspree.io and replace YOUR_FORM_ID -->
-        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <form action="https://formspree.io/f/mgonydzy" method="POST">
           <div class="form-row">
             <label for="fname">Name</label>
-            <input type="text" id="fname" name="name" required placeholder="Jane Smith">
+            <input type="text" id="fname" name="name" required placeholder="">
           </div>
           <div class="form-row">
             <label for="femail">Email</label>
-            <input type="email" id="femail" name="email" required placeholder="jane@example.com">
+            <input type="email" id="femail" name="email" required placeholder="">
           </div>
           <div class="form-row">
             <label for="fmsg">Message</label>
-            <textarea id="fmsg" name="message" required placeholder="Tell me about your project…"></textarea>
+            <textarea id="fmsg" name="message" required placeholder="Looking forward to hearing from you!"></textarea>
           </div>
           <button type="submit" class="btn-submit">
             Send message <span class="arrow">→</span>
@@ -1392,11 +1388,11 @@
       const d = item.dataset;
       currentIdx = idx;
       elTitle.textContent    = d.title || '';
-      elTag.textContent      = d.tag   || '';
+ 
       elDesc.textContent     = d.desc  || '';
       elBarLabel.textContent = d.title || 'Project';
       elMeta.innerHTML = '';
-      [['Year', d.year], ['Role', d.role], ['Category', d.tag]].forEach(([l, v]) => {
+      [['Year:', d.year], ['Role:', d.role], ['Skills:', d.tag]].forEach(([l, v]) => {
         if (v) elMeta.appendChild(makeMetaRow(l, v));
       });
       elImages.innerHTML = '';
@@ -1416,17 +1412,33 @@
 
       function buildVideoBlock(ytId, size) {
         const wrapper = document.createElement('div');
-        wrapper.style.cssText = size === 'half'
-          ? 'display:inline-block;width:50%;vertical-align:top;aspect-ratio:16/9;background:#000;'
-          : 'display:block;width:100%;aspect-ratio:16/9;background:#000;';
+        wrapper.style.cssText = (size === 'half'
+          ? 'display:inline-block;width:50%;vertical-align:top;'
+          : 'display:block;width:100%;') + 'aspect-ratio:16/9;background:#000;position:relative;';
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube-nocookie.com/embed/` + ytId;
+        iframe.src = `https://www.youtube.com/embed/${ytId}`;
         iframe.title = 'Project video';
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
         iframe.setAttribute('allowfullscreen', '');
         iframe.style.cssText = 'width:100%;height:100%;display:block;';
         wrapper.appendChild(iframe);
+
+        // Transparent overlay: keeps custom cursor working over the iframe,
+        // and opens lightbox on click. Disappears on mousedown so click reaches iframe.
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:absolute;inset:0;z-index:1;cursor:none;';
+        overlay.addEventListener('mousemove', e => {
+          const evt = new MouseEvent('mousemove', { clientX: e.clientX, clientY: e.clientY, bubbles: true });
+          document.dispatchEvent(evt);
+        });
+        overlay.addEventListener('mouseenter', () => addHover());
+        overlay.addEventListener('mouseleave', () => remHover());
+        // Pass clicks through to the iframe so the video plays in place
+        overlay.addEventListener('mousedown', () => overlay.style.pointerEvents = 'none');
+        document.addEventListener('mouseup',  () => overlay.style.pointerEvents = 'auto');
+        wrapper.appendChild(overlay);
+
         return wrapper;
       }
 
@@ -1486,7 +1498,10 @@
 
     function navigate(dir) {
       const next = currentIdx + dir;
-      if (next >= 0 && next < allItems.length) openModal(allItems[next], next);
+      if (next >= 0 && next < allItems.length) {
+        openModal(allItems[next], next);
+        document.getElementById('modal').scrollTop = 0;
+      }
     }
 
     allItems.forEach((item, i) => {
@@ -1517,101 +1532,131 @@
       if (!btn) return;
       let busy = false;
 
-      const isTouch = () => window.matchMedia('(hover: none)').matches;
+      // Easing functions
+      function easeInOut(t) {
+        return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+      }
+      function easeIn(t) { return t * t * t; }
 
-      // ── Hover (desktop only) ───────────────────────────────────
-      let puffInterval = null;
+      // Quadratic Bézier point
+      function bezier(t, p0, p1, p2) {
+        const mt = 1 - t;
+        return mt*mt*p0 + 2*mt*t*p1 + t*t*p2;
+      }
+
+      // Manual scroll — onFrame(progress), onDone()
+      function smoothScrollToTop(duration, onFrame, onDone) {
+        const start = window.scrollY;
+        if (start === 0) { onDone && onDone(); return; }
+        const t0 = performance.now();
+        function step(now) {
+          const p = Math.min((now - t0) / duration, 1);
+          window.scrollTo(0, start * (1 - easeInOut(p)));
+          onFrame && onFrame(p);
+          if (p < 1) requestAnimationFrame(step);
+          else onDone && onDone();
+        }
+        requestAnimationFrame(step);
+      }
 
       function spawnPuffs() {
-        ['-10px','0px','10px'].forEach((px, i) => {
+        [
+          { px: '-10px', py: '12px' },
+          { px:   '0px', py: '16px' },
+          { px:  '10px', py: '12px' },
+        ].forEach(({ px, py }) => {
           const p = document.createElement('div');
           p.className = 'rocket-puff';
-          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${12+i*2}px;`;
+          p.style.cssText = `width:10px;height:10px;left:50%;top:100%;margin-left:-5px;--px:${px};--py:${py};`;
           btn.appendChild(p);
           p.addEventListener('animationend', () => p.remove(), { once: true });
         });
       }
 
+      function buildChuteHTML() {} // removed
+
+      // Hover — rumble + flame + puffs while mouse is over button
+      let puffInterval = null;
       btn.addEventListener('mouseenter', () => {
-        if (busy || isTouch()) return;
+        if (busy) return;
         btn.classList.add('hovering');
         spawnPuffs();
         puffInterval = setInterval(spawnPuffs, 500);
       });
       btn.addEventListener('mouseleave', () => {
         btn.classList.remove('hovering');
-        clearInterval(puffInterval); puffInterval = null;
+        clearInterval(puffInterval);
+        puffInterval = null;
       });
 
-      // ── Click ─────────────────────────────────────────────────
       btn.addEventListener('click', () => {
         if (busy) return;
         busy = true;
+
+        // Phase 1 — ignition shake (380ms)
         btn.classList.remove('hovering');
-        clearInterval(puffInterval); puffInterval = null;
+        clearInterval(puffInterval);
+        puffInterval = null;
+        btn.classList.add('launching');
+        spawnPuffs();
 
-        if (isTouch()) {
-          // ── Mobile: simple CSS fly-up, no clone, no rAF ───────
-          btn.classList.add('launching');
-          setTimeout(() => {
-            btn.classList.remove('launching');
-            btn.classList.add('blasting');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => {
-              btn.classList.remove('blasting');
-              busy = false;
-            }, 600);
-          }, 250);
+        setTimeout(() => {
+          btn.classList.remove('launching');
 
-        } else {
-          // ── Desktop: full Bézier arc flight ───────────────────
-          function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
-          function easeIn(t)    { return t * t * t; }
-          function bezier(t, p0, p1, p2) { const m=1-t; return m*m*p0+2*m*t*p1+t*t*p2; }
+          // Snapshot start position (centre of button)
+          const r  = btn.getBoundingClientRect();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
 
-          btn.classList.add('launching');
-          spawnPuffs();
+          const sx = r.left + r.width  / 2;
+          const sy = r.top  + r.height / 2;
 
-          setTimeout(() => {
-            btn.classList.remove('launching');
-            const r  = btn.getBoundingClientRect();
-            const vw = window.innerWidth, vh = window.innerHeight;
-            const sx = r.left + r.width/2, sy = r.top + r.height/2;
+          // Arc: sweep to upper-left corner and off-screen
+          // Control point pulls hard upper-right to create the diagonal curve
+          const ex  = vw / 2;       // exit at centre-top
+          const ey  = -80;           // off-screen above
+          const cpx = sx;            // directly above start → rocket launches vertically
+          const cpy = vh * -0.4;     // control point high above — tangent at t=0 is straight up
 
-            const clone = document.createElement('div');
-            clone.id = 'rocket-clone';
-            const svgEl   = btn.querySelector('svg').cloneNode(true);
-            const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
-            const cloneFlame = svgEl.querySelector('#rocket-flame');
-            if (cloneFlame) cloneFlame.style.opacity = '1';
-            clone.appendChild(svgEl);
-            clone.appendChild(labelEl);
-            clone.style.cssText = `left:${sx}px;top:${sy}px;transform:translate(-50%,-50%);`;
-            document.body.appendChild(clone);
-            btn.classList.add('blasting');
+          // Clone — SVG + ghost label
+          const clone = document.createElement('div');
+          clone.id = 'rocket-clone';
+          const svgEl = btn.querySelector('svg').cloneNode(true);
+          const labelEl = btn.querySelector('.rocket-label').cloneNode(true);
+          // Make flame visible on clone
+          const cloneFlame = svgEl.querySelector('#rocket-flame');
+          if (cloneFlame) { cloneFlame.style.opacity = '1'; }
+          clone.appendChild(svgEl);
+          clone.appendChild(labelEl); // label inherits opacity:0.18 from CSS
+          clone.style.cssText = `left:${sx}px; top:${sy}px; transform:translate(-50%,-50%);`;
+          document.body.appendChild(clone);
 
-            let prevX = sx, prevY = sy + 1;
-            const start = window.scrollY;
-            const t0 = performance.now();
-            const dur = 2200;
+          btn.classList.add('blasting');
 
-            function step(now) {
-              const prog = Math.min((now - t0) / dur, 1);
-              window.scrollTo(0, start * (1 - easeInOut(prog)));
-              const t  = easeIn(prog);
-              const nx = bezier(t, sx, sx, vw/2);
-              const ny = bezier(t, sy, vh*-0.4, -80);
-              const angle = Math.atan2(ny-prevY, nx-prevX) * 180/Math.PI + 90;
+          // Seed prevX slightly off so first-frame angle is straight up (not zero)
+          let prevX = sx, prevY = sy + 1;
+
+          smoothScrollToTop(2200,
+            (progress) => {
+              const t    = easeIn(progress);
+              const nx   = bezier(t, sx, cpx, ex);
+              const ny   = bezier(t, sy, cpy, ey);
+              const dx   = nx - prevX;
+              const dy   = ny - prevY;
+              const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
               prevX = nx; prevY = ny;
               clone.style.left      = nx + 'px';
               clone.style.top       = ny + 'px';
               clone.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
-              if (prog < 1) requestAnimationFrame(step);
-              else { clone.remove(); btn.classList.remove('blasting'); busy = false; }
+            },
+            () => {
+              clone.remove();
+              btn.classList.remove('blasting');
+              busy = false;
             }
-            requestAnimationFrame(step);
-          }, 380);
-        }
+          );
+
+        }, 380);
       });
     })();
     // ── End rocket ─────────────────────────────────────────────
@@ -2250,29 +2295,40 @@
     (function () {
       const lb        = document.getElementById('lightbox');
       const lbImg     = document.getElementById('lightbox-img');
+      const lbVideo   = document.getElementById('lightbox-video');
       const lbPrev    = document.getElementById('lb-prev');
       const lbNext    = document.getElementById('lb-next');
       const lbClose   = document.getElementById('lb-close');
       const lbCounter = document.getElementById('lb-counter');
       const lbHint    = document.getElementById('lb-hint');
 
-      let srcs    = [];   // all image srcs in current modal
+      // Each entry: { type: 'img'|'video', src: string }
+      let items   = [];
       let current = 0;
       let hintShown = false;
 
-      function getModalSrcs() {
-        return Array.from(document.querySelectorAll('#modal-images .modal-img-block img'))
-                    .map(i => i.src);
+      function getModalItems() {
+        const results = [];
+        document.querySelectorAll('#modal-images .modal-img-block').forEach(block => {
+          // images
+          block.querySelectorAll('img').forEach(img => {
+            results.push({ type: 'img', src: img.src });
+          });
+          // iframes (videos) — extract just the video ID for a clean embed
+          block.querySelectorAll('iframe').forEach(iframe => {
+            results.push({ type: 'video', src: iframe.src });
+          });
+        });
+        return results;
       }
 
       window.lbOpen = function (clickedSrc) {
-        srcs    = getModalSrcs();
-        current = srcs.findIndex(s => s === clickedSrc);
+        items   = getModalItems();
+        current = items.findIndex(it => it.src === clickedSrc);
         if (current < 0) current = 0;
         render();
         lb.classList.add('open');
         document.body.style.overflow = 'hidden';
-        // Show hint briefly on first ever open
         if (!hintShown) {
           hintShown = true;
           lbHint.style.opacity = '1';
@@ -2282,39 +2338,60 @@
         }
       };
 
+      // Also allow opening a video directly by src
+      window.lbOpenVideo = function (videoSrc) {
+        items   = getModalItems();
+        current = items.findIndex(it => it.src === videoSrc);
+        if (current < 0) current = 0;
+        render();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+
       function render() {
-        lbImg.src          = srcs[current] || '';
-        lbCounter.textContent = srcs.length > 1 ? (current + 1) + ' / ' + srcs.length : '';
+        const item = items[current];
+        if (!item) return;
+        if (item.type === 'video') {
+          lbImg.style.display   = 'none';
+          lbVideo.style.display = 'block';
+          // Add autoplay to the lightbox embed
+          lbVideo.src = item.src.replace('youtube.com/embed/', 'youtube.com/embed/').split('?')[0] + '?autoplay=1';
+        } else {
+          lbImg.style.display   = 'block';
+          lbVideo.style.display = 'none';
+          lbVideo.src = ''; // stop any playing video
+          lbImg.src   = item.src;
+        }
+        lbCounter.textContent = items.length > 1 ? (current + 1) + ' / ' + items.length : '';
         lbPrev.classList.toggle('hidden', current === 0);
-        lbNext.classList.toggle('hidden', current === srcs.length - 1);
+        lbNext.classList.toggle('hidden', current === items.length - 1);
       }
 
       function close() {
         lb.classList.remove('open');
+        lbVideo.src = ''; // stop video playback
         document.body.style.overflow = '';
       }
 
       function step(dir) {
         const n = current + dir;
-        if (n >= 0 && n < srcs.length) { current = n; render(); }
+        if (n >= 0 && n < items.length) { current = n; render(); }
       }
 
       lbClose.addEventListener('click', close);
       lbPrev.addEventListener('click',  () => step(-1));
       lbNext.addEventListener('click',  () => step(1));
 
-      // Click backdrop (not image/controls) to close
       lb.addEventListener('click', e => {
         if (e.target === lb || e.target === lbImg) close();
       });
 
-      // Keyboard: arrows browse within lightbox, Escape closes lightbox only
       document.addEventListener('keydown', e => {
         if (!lb.classList.contains('open')) return;
         if (e.key === 'Escape')     { e.stopImmediatePropagation(); close(); }
         if (e.key === 'ArrowLeft')  { e.stopImmediatePropagation(); step(-1); }
         if (e.key === 'ArrowRight') { e.stopImmediatePropagation(); step(1); }
-      }, true); // capture phase so it intercepts before modal's own keydown
+      }, true);
     })();
     // ══ END LIGHTBOX ══════════════════════════════════════════════
 
