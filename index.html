@@ -1275,15 +1275,11 @@ Open to relocation worldwide.<br><br></p>
       cursor.classList.toggle('light', inDark);
     });
 
-    // Hide cursor when mouse leaves the browser window or page loses focus
+    // Hide cursor when mouse leaves the browser window
     document.addEventListener('mouseleave', e => {
-      // Only hide if leaving the window entirely (relatedTarget is null)
-      // not when entering an iframe
       if (!e.relatedTarget) cursor.style.opacity = '0';
     });
     document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
-    window.addEventListener('blur',         () => cursor.style.opacity = '0');
-    window.addEventListener('focus',        () => cursor.style.opacity = '1');
 
     function addHover()  { cursor.classList.add('hover'); }
     function remHover()  { cursor.classList.remove('hover'); }
