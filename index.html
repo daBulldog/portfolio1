@@ -38,7 +38,7 @@
       --font-body:    'DM Mono', monospace;     /*'DM Sans', sans-serif;*/
       --nav-h:        52px;
       --gap:          clamp(1rem, 2vw, 2rem);
-      --base-font-size: clamp(17px, 1.5vw, 19px); /* ← adjust site-wide font size here */
+      --base-font-size: clamp(17px, 2vw, 25px); /* ← adjust site-wide font size here */
     }
 
     /* ── DARK MODE ─────────────────────────────────────────────── */
@@ -2038,13 +2038,19 @@ Open to relocation worldwide.<br><br></p>
         crossV.style.display = active ? 'block' : 'none';
         coords.style.display = active ? 'block' : 'none';
         if (active) { buildBoxes(); showToast('Dimension mode ON — D to exit'); }
-        else        { clearAll();   showToast('Dimension mode OFF'); }
+        else        { clearAll();   showToast('Dimension mode OFF', 1500); }
       }
 
       function showToast(msg) {
         toast.textContent = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+        // setTimeout(() => toast.classList.remove('show'), 2500); //
+      }
+
+      function showToast(msg, duration = 0) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        if (duration) setTimeout(() => toast.classList.remove('show'), duration);
       }
 
       // ── Modal observer ───────────────────────────────────────────
