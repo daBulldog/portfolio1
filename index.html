@@ -650,7 +650,7 @@
       font-family: var(--font-mono); font-size: 0.62rem;
       letter-spacing: 0.15em; text-transform: uppercase;
       color: var(--muted);
-      opacity: 0.18; /* ghost — visible but transparent while flying */
+      opacity: 0; /* ghost — visible but transparent while flying */
     }
     /* Flame fades off on descent */
     #rocket-btn.landing #rocket-flame { opacity: 0; }
@@ -874,7 +874,7 @@
             <em>HAMILTON</em>
           </h1>
           <p class="hero-sub">
-            Mechanical Engineering &amp; Industrial Design.<br>
+            Industrial Designer &amp; Mechanical Engineer.<br>
             Rensselaer Polytechnic Institute — Graduating May 2026.
           </p>
    
@@ -893,9 +893,9 @@
         <!-- ── Edit your bio, links, tags and stats here ── -->
         <div class="hero-right">
           <p class="hero-sub">
-           I’m a senior at Rensselaer Polytechnic Institute, majoring Mechanical Engineering & Design, Innovation, and Society, with a deep interest in merging engineering and design. I’ve led projects from designing an ornithopter for crop monitoring to developing a hydro-powered sound installation, combining technical skills with creative problem-solving.
+           I’m a senior at Rensselaer Polytechnic Institute, majoring in Mechanical Engineering and Design, Innovation, & Society, with a minor in Studio Arts. My focus is in merging human-centered design and engineering. I’ve led projects from designing an ornithopter for crop monitoring to developing a mechanism for accessibility in sneakers and jewelry, combining technical skills with creative problem-solving.
 <br> <br>
-Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contribute to Instructables and have taught 500,000+ viewers through 3D modeling tutorials on YouTube. I thrive in collaborative environments, bringing curiosity and innovation to every project.
+Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contribute to Instructables.com and have taught 500,000+ viewers through 3D modeling tutorials on YouTube. I thrive in collaborative environments, bringing curiosity and innovation to every project.
 
           <div class="hero-about-tags">
             <span class="hero-about-tag">Mechanical Engineering</span>
@@ -1616,7 +1616,7 @@ Open to relocation worldwide.<br><br></p>
           const cloneFlame = svgEl.querySelector('#rocket-flame');
           if (cloneFlame) { cloneFlame.style.opacity = '1'; }
           clone.appendChild(svgEl);
-          clone.appendChild(labelEl); // label inherits opacity:0.18 from CSS
+          clone.appendChild(labelEl); // label inherits opacity:0; from CSS
           clone.style.cssText = `left:${sx}px; top:${sy}px; transform:translate(-50%,-50%);`;
           document.body.appendChild(clone);
 
