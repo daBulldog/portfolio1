@@ -681,7 +681,8 @@
       .modal-info { overflow: visible; }
     }
     @media (max-width: 768px) {
-      .nav-links { display: none; }
+      .nav-links { display: flex; gap: 1.2rem; }
+      .nav-links a { font-size: 0.6rem; }
       .hero-inner { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
     }
@@ -861,9 +862,6 @@
   <div class="hero-bg"></div>
   <div class="hero-layout">
 
-  <span class="section-number" style="position:absolute; top:calc(var(--nav-h) - 9rem); left:clamp(-3rem, -6vw, -6rem); z-index:200;">[ 01 ]</span>    
-
-
    <div class="hero-inner">
 
 
@@ -885,7 +883,7 @@
           <div class="hero-about-links">
             <a href="GaetanoHamiltonResume.pdf" target="_blank" rel="noopener noreferrer" class="hero-about-link">Resume</a>
             <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="hero-about-link">LinkedIn</a>  
-            <a href="mailto:gaetanoham@outlook.com" class="hero-about-link">Email</a>
+            <a href="/cdn-cgi/l/email-protection#57303632233639383f363a173822233b38383c7934383a" class="hero-about-link">Email</a>
           </div>
 
 
@@ -931,7 +929,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
        ============================================================ -->
   <section id="work">
     <div class="section-header">
-      <span class="section-number">[ 02 ]</span>
+      <span class="section-number">[ 01 ]</span>
       <h2 class="section-title">Projects</h2>
     </div>
     <div class="portfolio-grid">
@@ -941,7 +939,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Solemates"
            data-tag="Human Factors · Fusion 360 · 3D printing · Pattern Making · Sewing · Collaboration · User Testing · Teamwork"
            data-year="Fall 2023"
-           data-role="Design, Prototyping, User Testing"
+           data-role="Team Lead"
            data-desc="Designed a no-tie sneaker with a knob-based tightening mechanism to improve accessibility for users with limited hand dexterity. Developed prototypes with custom patterns and hand-sewn uppers, refining the mechanism through iterative 3D printing, testing, and user feedback."
            data-color="#C4B9AA"
            data-images="Slide9.JPG,Slide6.JPG,Slide7.JPG,Slide8.JPG"
@@ -954,7 +952,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
           <span class="item-name">Solemates</span>
           <span class="item-tag">Product Design</span>
         </div>
-        <p class="item-desc">Accessible no-tie sneaker with 3D-printed tightening mechanisms.</p>
+        <p class="item-desc">Accessible no-tie sneaker with 3D-printed tightening mechanisms and replacable soles.</p>
       </div>
 
       <!-- PROJECT 2 — Accessible Jewelry Clasps -->
@@ -962,7 +960,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Accessible Jewelry Clasps"
            data-tag="Sketching · 3D Printing · User Testing · Rendering · Unreal Engine · Blender · Fusion 360"
            data-year="Spring 2023"
-           data-role="Design, Prototyping"
+           data-role="CAD Modeler/Mechanism Designer"
            data-desc="Designed accessible jewelry clasps enabling users with limited hand dexterity to independently fasten necklaces and bracelets. Iterated through prototypes to balance usability, reliability, and aesthetics while maintaining a refined, luxury-inspired design language."
            data-color="#C9BFB6"
            data-images="Slide10.JPG,Slide11.JPG,Slide12.JPG,Slide13.JPG">
@@ -981,7 +979,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Gravity-Powered Clock"
            data-tag="2D Drafting · CAD · Woodworking · Prototyping · Mechanical Design · Horology · Research"
            data-year="2022"
-           data-role="Design, Fabrication"
+           data-role="Design Engineer (Solo Project)"
            data-desc="Developed a 27&quot; gravity-powered wooden clock featuring a tourbillon escapement and retrograding minute hand. Modeled mechanisms in Fusion 360 and fabricated the gear train by hand, applying horology research on escapements, gear ratios, and gravity-driven regulation."
            data-color="#A89F94"
            data-images="Slide2.JPG,Slide3.JPG,Slide37.JPG,Slide4.JPG"
@@ -1001,7 +999,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Paper Lantern Lamps"
            data-tag="Concept Sketching · Material Research · Fabrication · Electrical · Blender 3D"
            data-year="Winter 2025"
-           data-role="Design, Fabrication"
+           data-role="Designer (Solo Project)"
            data-desc="Designed a series of paper lantern lamps inspired by Isamu Noguchi and his Akari Light Sculptures. Developed lightweight frame structures and paper diffusers to explore the interplay of light, shadow, and material."
            data-color="#D6CEBC"
            data-images="Slide30.JPG,Slide31.JPG,Slide33.JPG"  
@@ -1014,7 +1012,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
           <span class="item-name">Paper Lantern Lamps</span>
           <span class="item-tag">Art & Design</span>
         </div>
-        <p class="item-desc">Handcrafted lamps exploring light, shadow, and folded paper.</p>
+        <p class="item-desc">Lantern Lamps inspired by Isamu Noguchi, exploring light, shadow, and form.</p>
       </div>
 
       <!-- PROJECT 5 — Hydro-Powered Curiosity -->
@@ -1022,7 +1020,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Hydro-Powered Curiosity"
            data-tag="Rapid Prototyping · Fluid Dynamics · Location Research · Creativity"
            data-year="Summer 2024"
-           data-role="Design, Fabrication"
+           data-role="Designer (Solo Project)"
            data-desc="Designed a hydro-powered installation that converts flowing water into sound. River-driven mechanisms generate musical notes, creating an interactive system that connects art, engineering, and environmental awareness through the experience of moving water."
            data-color="#9EAAB0"
            data-images="Slide26.JPG,Slide27.JPG,Slide29.JPG"
@@ -1035,7 +1033,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
           <span class="item-name">Hydro-Powered Curiosity</span>
           <span class="item-tag">Art & Engineering</span>
         </div>
-        <p class="item-desc">Water flow translated into sound — art meets regenerative engineering.</p>
+        <p class="item-desc">Interactive instrument translating water flow into sound to highlight hydropower.</p>
       </div>
 
       <!-- PROJECT 6 — Baseball Sneakers -->
@@ -1043,7 +1041,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Baseball Sneakers"
            data-tag="Conceptual Blending · Design Translation · Pattern Making · Manufacturing Research · Sewing"
            data-year="Summer 2023"
-           data-role="Design, Fabrication"
+           data-role="Designer (Solo Project)"
            data-desc="Designed canvas sneakers inspired by baseball aesthetics, incorporating characteristic stitching patterns and materials. Developed custom lasts and patterns to construct the uppers and integrate cork insoles for comfort, structure, and durability."
            data-color="#BFB8AD"
            data-images="Slide14.JPG,Slide15.JPG,Slide16.JPG,Slide17.JPG">
@@ -1054,7 +1052,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
           <span class="item-name">Baseball Sneakers</span>
           <span class="item-tag">Product Design</span>
         </div>
-        <p class="item-desc">Hand-sewn sneakers inspired by baseball craft and aesthetics.</p>
+        <p class="item-desc">Hand-sewn sneakers inspired by baseball aesthetics.</p>
       </div>
 
       <!-- PROJECT 7 — Agricultural Ornithopter -->
@@ -1062,7 +1060,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Agricultural Ornithopter"
            data-tag="Leadership · Mechanical Design · Seimens NX · Fusion 360 · Electronics · System Integration · Component Selection"
            data-year="Summer 2024"
-           data-role="Team Lead, Design & Engineering"
+           data-role="Lead Engineer"
            data-desc="Led a team in designing an ornithopter, a flapping-wing aircraft inspired by bird flight, for crop monitoring and non-invasive pest deterrence. Engineered and tested a flapping mechanism while communicating development progress and challenges to stakeholders."
            data-color="#B8B5AE"
            data-images="Slide23.JPG,Slide24.JPG,Slide25.JPG" 5AeuCir9iOQ
@@ -1083,8 +1081,8 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Scents-ory Toy Series"
            data-tag="Rhino 3D · User Research · Organization · Collaboration · Rapid Prototyping · Market Analysis"
            data-year="Spring 2023"
-           data-role="Concept, Design, Prototyping"
-           data-desc="Developed the Scents-ory toy series, sensory objects designed to engage children through scent, texture, and playful interaction. Combined varied forms, materials, and embedded scented elements to stimulate multiple senses while remaining safe and visually inviting."
+           data-role="Industrial Designer"
+           data-desc="Developed a series of sensory toys designed to engage children through scent, texture, and playful interaction while complementing the home environment. Combined varied forms and materials inspired by Hella Jongerius, embedding scented elements to stimulate multiple senses."
            data-color="#C8C2B8"
            data-images="Slide18.JPG,Slide19.JPG,Slide20.JPG,Slide21.JPG,Slide22.JPG">
         <div class="thumb">
@@ -1094,7 +1092,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
           <span class="item-name">Scents-ory Toy Series</span>
           <span class="item-tag">Product Design</span>
         </div>
-        <p class="item-desc">Multi-sensory toy series engaging children through scent and play.</p>
+        <p class="item-desc">Toy series engaging children through scent & play, inspired by designer Hella Jongerius.</p>
       </div>
 
       <!-- PROJECT 9 — Renderings -->
@@ -1102,8 +1100,8 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Renderings"
            data-tag="Product Visualization using: Rhino 3D · Seimens NX · SolidWorks · Fusion 360 · Blender 3D"
            data-year="2022–Present"
-           data-role="3D Modeling, Visualization"
-           data-desc="A collection of 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, surface development, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
+           data-role="3D Modeler and Artist"
+           data-desc="A collection of product sketches, 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, surface development, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
            data-color="#BDB7AF"
            data-images="Slide34.JPG,Slide35.JPG">
         <div class="thumb">
@@ -1111,9 +1109,9 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
         </div>
         <div class="item-info">
           <span class="item-name">Renderings</span>
-          <span class="item-tag">Digital Design</span>
+          <span class="item-tag">Design Visualization</span>
         </div>
-        <p class="item-desc">3D renderings and visualizations across projects and explorations.</p>
+        <p class="item-desc">Sketches, 3D renderings and visualizations across projects and explorations.</p>
       </div>
 
       <!-- PROJECT 10 — Automata -->
@@ -1121,7 +1119,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
            data-title="Automata"
            data-tag="Creativity · Mechanical Design · Experimentation · Visual Storytelling · Art"
            data-year="2019–Present"
-           data-role="Design, Fabrication"
+           data-role="Design Engineer (Solo Project)"
            data-desc="Designed and built a series of automata - mechanical sculptures that produce lifelike movement through cam-driven mechanisms and linkage systems. Explores how simple mechanical systems translate rotational input into expressive kinetic motion."
            data-color="#AFA99F"
            data-images="Slide38.jpg" 
@@ -1185,21 +1183,21 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
   <!-- CONTACT -->
   <section id="contact">
     <div class="section-header">
-      <span class="section-number">[ 03 ]</span>
+      <span class="section-number">[ 02 ]</span>
       <h2 class="section-title">Contact</h2>
     </div>
     <div class="contact-inner">
       <div>
         <img src="gaetano.jpg" alt="Let's work together" class="contact-heading" style="width:400px; height:400px; object-fit:cover;">
         <p class="contact-note" style="margin-bottom:0;">
-          Open to internships, collaborations, and creative engineering projects.
-          Currently based in Troy, NY. Available for opportunities worldwide.<br><br></p>
+          Seeking full-time opportunities in Industrial Design or Mechanical Engineering, as well as creative engineering projects and internships.
+Open to relocation worldwide.<br><br></p>
         <div class="contact-links" style="margin-top:0;">
           <!-- CHANGE THIS: replace with your real email -->
           <a href="GaetanoHamiltonResume.pdf" class="contact-link">Resume</a>
           <a href="https://www.linkedin.com/in/gaetanohamilton/" target="_blank" rel="noopener noreferrer" class="contact-link">LinkedIn</a>
           <a href="https://www.instructables.com/member/da%20Bulldog/" target="_blank" rel="noopener noreferrer" class="contact-link">Instructables</a>
-          <a href="mailto:gaetanoham@outlook.com" class="contact-link">Email</a>
+          <a href="/cdn-cgi/l/email-protection#d2b5b3b7a6b3bcbdbab3bf92bda7a6bebdbdb9fcb1bdbf" class="contact-link">Email</a>
 
         </div>
       </div>
@@ -1262,7 +1260,7 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
     </button>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ── Custom cursor with dark/light auto-switching ───────────
     const cursor = document.getElementById('cursor');
 
@@ -1276,6 +1274,16 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
       const inDark = el && el.closest('#about') !== null;
       cursor.classList.toggle('light', inDark);
     });
+
+    // Hide cursor when mouse leaves the browser window or page loses focus
+    document.addEventListener('mouseleave', e => {
+      // Only hide if leaving the window entirely (relatedTarget is null)
+      // not when entering an iframe
+      if (!e.relatedTarget) cursor.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+    window.addEventListener('blur',         () => cursor.style.opacity = '0');
+    window.addEventListener('focus',        () => cursor.style.opacity = '1');
 
     function addHover()  { cursor.classList.add('hover'); }
     function remHover()  { cursor.classList.remove('hover'); }
@@ -1423,20 +1431,6 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
         iframe.style.cssText = 'width:100%;height:100%;display:block;';
         wrapper.appendChild(iframe);
 
-        // Transparent overlay: keeps custom cursor working over the iframe,
-        // and opens lightbox on click. Disappears on mousedown so click reaches iframe.
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:absolute;inset:0;z-index:1;cursor:none;';
-        overlay.addEventListener('mousemove', e => {
-          const evt = new MouseEvent('mousemove', { clientX: e.clientX, clientY: e.clientY, bubbles: true });
-          document.dispatchEvent(evt);
-        });
-        overlay.addEventListener('mouseenter', () => addHover());
-        overlay.addEventListener('mouseleave', () => remHover());
-        // Pass clicks through to the iframe so the video plays in place
-        overlay.addEventListener('mousedown', () => overlay.style.pointerEvents = 'none');
-        document.addEventListener('mouseup',  () => overlay.style.pointerEvents = 'auto');
-        wrapper.appendChild(overlay);
 
         return wrapper;
       }
@@ -2393,11 +2387,6 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
       }, true);
     })();
     // ══ END LIGHTBOX ══════════════════════════════════════════════
-
-
-
-
-
   </script>
 </body>
 </html>
