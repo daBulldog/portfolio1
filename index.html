@@ -124,7 +124,7 @@
 
     /* ── MODAL RULER ────────────────────────────────────────────── */
     .modal-body {
-      display: grid; grid-template-columns: 1fr 20px 360px;
+      display: grid; grid-template-columns: 1fr 20px 360px 20px;
       height: calc(100vh - var(--nav-h)); overflow: hidden;
     }
     #modal-ruler {
@@ -163,6 +163,41 @@
       z-index: 1;
     }
     #modal-ruler-block:active { cursor: grabbing; }
+    #modal-info-ruler {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-left: 1px solid var(--border);
+      background: var(--bg);
+    }
+    #modal-info-ruler canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #modal-info-ruler-block {
+      position: absolute;
+      left: 0; right: 0;
+      background: var(--muted);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 6px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      cursor: grab;
+      transition: top 0.05s linear;
+      padding: 3px 0;
+      min-height: 24px;
+      user-select: none;
+      z-index: 1;
+    }
+    #modal-info-ruler-block:active { cursor: grabbing; }
     /* ── END RULER ──────────────────────────────────────────────── */
 
     /* ── LIGHTBOX ───────────────────────────────────────────────── */
@@ -534,6 +569,7 @@
       
     }
     .modal-images::-webkit-scrollbar { display: none; }
+    .modal-info::-webkit-scrollbar { display: none; }
     .modal-img-block { width: 100%; flex-shrink: 0; overflow: hidden; background: #fff; }
     .modal-img-block.main  { aspect-ratio: 2/1.2; }
     .modal-img-block.extra { aspect-ratio: 2/1.1; }
@@ -541,7 +577,7 @@
     .modal-img-block .ph  { width: 100%; height: 100%; display: block; }
     .modal-info {
       padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 3vw, 2.5rem);
-      display: flex; flex-direction: column; gap: 1.75rem; overflow: hidden;
+      display: flex; flex-direction: column; gap: 1.75rem; overflow-y: auto; scrollbar-width: none;
     }
     .modal-project-title { font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 0.03em; line-height: 0.95; }
     .modal-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
@@ -677,6 +713,7 @@
       #modal { overflow-y: auto; scrollbar-width: none; }
       #modal::-webkit-scrollbar { display: none; }
       #modal-ruler { display: none; }
+      #modal-info-ruler { display: none; }
       .modal-images { height: auto; overflow: visible; border-right: none; border-bottom: 1px solid var(--border); }
       .modal-info { overflow: visible; }
     }
@@ -822,7 +859,7 @@
         <canvas id="modal-ruler-canvas"></canvas>
         <div id="modal-ruler-block">0.0 cm</div>
       </div>
-      <div class="modal-info">
+      <div class="modal-info" id="modal-info">
         <div>
            
           <h2 class="modal-project-title" id="modal-title"></h2>
@@ -833,6 +870,10 @@
           <button class="modal-nav-btn" id="modal-prev">← Prev</button>
           <button class="modal-nav-btn" id="modal-next">Next →</button>
         </div>
+      </div>
+      <div id="modal-info-ruler">
+        <canvas id="modal-info-ruler-canvas"></canvas>
+        <div id="modal-info-ruler-block">0%</div>
       </div>
     </div>
   </div>
@@ -937,10 +978,10 @@ Proficient in CAD, 3D modeling, rapid prototyping, and electronics, I also contr
       <!-- PROJECT 9 — Renderings -->
       <div class="portfolio-item reveal"
            data-title="Renderings"
-           data-tag="Product Visualization using: Rhino 3D · Seimens NX · SolidWorks · Fusion 360 · Blender 3D"
+           data-tag="Hand Sketching · Product Visualization using: Rhino 3D · Seimens NX · SolidWorks · Fusion 360 · Blender 3D"
            data-year="2022–Present"
            data-role="3D Modeler and Artist"
-           data-desc="A collection of product sketches, 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, surface development, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
+           data-desc="A collection of product sketches, 3D renderings and visualizations from various projects and explorations. Demonstrates proficiency in CAD modeling, hand sketching, and photorealistic rendering across product concepts, mechanical components, and architectural forms."
            data-color="#BDB7AF"
            data-images="Slide34.JPG,Slide43.jpg,Slide35.JPG">
         <div class="thumb">
@@ -1491,6 +1532,7 @@ Open to relocation worldwide.<br><br></p>
       if (next >= 0 && next < allItems.length) {
         openModal(allItems[next], next);
         document.getElementById('modal').scrollTop = 0;
+        document.getElementById('modal-info').scrollTop = 0;
       }
     }
 
@@ -2236,6 +2278,12 @@ Open to relocation worldwide.<br><br></p>
       const modalImages  = document.getElementById('modal-images');
 
       let modalRuler = null;
+      let infoRuler  = null;
+
+      const modalInfoEl       = document.getElementById('modal-info');
+      const modalInfoRulerEl  = document.getElementById('modal-info-ruler');
+      const modalInfoCanvas   = document.getElementById('modal-info-ruler-canvas');
+      const modalInfoBlock    = document.getElementById('modal-info-ruler-block');
 
       function initModalRuler() {
         if (modalRuler) return;
@@ -2254,6 +2302,24 @@ Open to relocation worldwide.<br><br></p>
         modalImages.addEventListener('scroll', modalRuler.update, { passive: true });
       }
 
+      function initInfoRuler() {
+        if (infoRuler) return;
+        if (!modalInfoEl || !modalInfoRulerEl) return;
+        infoRuler = setupRuler({
+          canvas:       modalInfoCanvas,
+          block:        modalInfoBlock,
+          rulerEl:      modalInfoRulerEl,
+          getScrollPx:  () => modalInfoEl.scrollTop,
+          getScrollMax: () => modalInfoEl.scrollHeight - modalInfoEl.clientHeight,
+          setScroll:    frac => {
+            const max = modalInfoEl.scrollHeight - modalInfoEl.clientHeight;
+            modalInfoEl.scrollTop = frac * max;
+          },
+          side: 'left'
+        });
+        modalInfoEl.addEventListener('scroll', infoRuler.update, { passive: true });
+      }
+
       // Init/redraw when modal opens
       if (modalEl) {
         new MutationObserver(() => {
@@ -2262,6 +2328,9 @@ Open to relocation worldwide.<br><br></p>
               initModalRuler();
               modalRuler.resize();
               modalRuler.update();
+              initInfoRuler();
+              infoRuler.resize();
+              infoRuler.update();
             }, 80);
           }
         }).observe(modalEl, { attributes: true, attributeFilter: ['class'] });
@@ -2269,8 +2338,9 @@ Open to relocation worldwide.<br><br></p>
 
       window.addEventListener('resize', () => {
         page.resize(); page.update();
-        if (modalRuler && modalEl && modalEl.classList.contains('open')) {
-          modalRuler.resize(); modalRuler.update();
+        if (modalEl && modalEl.classList.contains('open')) {
+          if (modalRuler) { modalRuler.resize(); modalRuler.update(); }
+          if (infoRuler)  { infoRuler.resize();  infoRuler.update();  }
         }
       });
 
@@ -2280,7 +2350,10 @@ Open to relocation worldwide.<br><br></p>
         darkToggle.addEventListener('click', () => {
           requestAnimationFrame(() => {
             page.resize();
-            if (modalRuler && modalEl && modalEl.classList.contains('open')) modalRuler.resize();
+            if (modalEl && modalEl.classList.contains('open')) {
+              if (modalRuler) modalRuler.resize();
+              if (infoRuler)  infoRuler.resize();
+            }
           });
         });
       }
